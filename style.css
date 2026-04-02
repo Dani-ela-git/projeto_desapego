@@ -1,7 +1,587 @@
-:root{
-    --yellow-color:#f9c80eff;
+:root {
+    --yellow-color: #f9c80eff;
     --red-color: #e0161dff;
     --terracota-color: #f55231ff;
     --pink-color: #ff26b0ff;
     --purple-color: #49416dff;
 }
+
+* {
+    margin: 0;
+    padding: 0;
+    outline: none;
+    border: none;
+    text-decoration: none;
+}
+
+.header {
+    background-color: white;
+    /*só para visualização*/
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 99;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+    display: flex;
+    gap: 3rem;
+    transition: top 0.3s ease-in-out;
+    padding: 30px 50px;
+    height: 90px;
+}
+
+
+
+.header .navbar button {
+    /*estilo para todos os botoes da navbar*/
+    background: none;
+    cursor: pointer;
+    padding: 0%;
+}
+
+.header .navbar button a {
+    display: inline-block;
+    font-family: "inter", sans-serif;
+    color: black;
+    font-size: 18px;
+    font-weight: 5000;
+    text-decoration: none;
+    transition: 0.2s linear;
+    padding: 1rem 1.5rem;
+    margin-right: 20px;
+}
+
+/*especificando os botoes*/
+
+.header .navbar .sobre a {
+    color: black;
+    background-color: rgba(238, 230, 230, 0.5);
+    border-radius: 12px;
+}
+
+.header .navbar .sobre a:hover {
+    letter-spacing: 0.05rem;
+    background-color: #ffffffff;
+}
+
+.header .navbar .entrar a {
+    background-color: rgba(204, 202, 212, 0.5);
+    color: #000000;
+    border-radius: 12px;
+}
+
+.header .navbar .entrar a:hover {
+    letter-spacing: 0.05rem;
+    background-color: #ffffffff;
+    color: var(--purple-color);
+}
+
+.header .navbar .login a {
+    background-color: rgba(73, 65, 109, 0.8);
+    color: #ffffffff;
+    border-radius: 12px;
+}
+
+.header .navbar .login a:hover {
+    letter-spacing: 0.05rem;
+    background-color: #ffffffff;
+    color: var(--purple-color);
+}
+
+/*criando um grid area para melhor dispor as telas*/
+
+.grid-container {
+    display: grid;
+    grid-template-areas:
+        "header header header"
+        "titulo titulo titulo"
+        "conteudo conteudo conteudo"
+        "alimentos objetos roupas"
+        "footer footer footer";
+
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows:
+        80px
+        /* Header - altura fixa */
+        400px
+        /* Título - área de destaque */
+        200px
+        /* Conteúdo - texto explicativo */
+        450px
+        /* Cards - área dos produtos */
+        100px;
+    /* Footer - rodapé */
+
+    gap: 20px;
+    min-height: 100vh;
+    padding-top: 0;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+/*definir quais itens estão ocupando cada area*/
+.header {
+    grid-area: header;
+}
+
+.titulo {
+    grid-area: titulo;
+}
+
+.conteudo {
+    grid-area: conteudo;
+}
+
+.alimentos {
+    grid-area: alimentos;
+}
+
+.objetos {
+    grid-area: objetos;
+}
+
+.roupas {
+    grid-area: roupas;
+}
+
+.footer {
+    grid-area: footer;
+}
+
+/*arrumando o estilo de cada área*/
+.titulo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.titulo h1 {
+    font-family: "playfair display", serif;
+    color: var(--red-color);
+    font-size: 100px;
+}
+
+.titulo .btn-doar {
+    /*padrão para desktop*/
+    background-color: rgba(245, 82, 49, 1);
+    display: inline-block;
+    font-family: "inter", sans-serif;
+    color: black;
+    font-size: 18px;
+    font-weight: 5000;
+    padding: 1rem 1.5rem;
+    text-decoration: none;
+    transition: 0.2s linear;
+    margin-right: 20px;
+    border-radius: 12px;
+}
+
+.titulo .btn-doar:hover {
+    letter-spacing: 0.05rem;
+}
+
+.titulo .btn-retirar {
+    background-color: var(--yellow-color);
+    display: inline-block;
+    font-family: "inter", sans-serif;
+    color: black;
+    font-size: 18px;
+    font-weight: 6000;
+    padding: 1rem 1.5rem;
+    text-decoration: none;
+    transition: 0.2s linear;
+    margin-right: 20px;
+    border-radius: 12px;
+}
+
+.titulo .btn-retirar:hover {
+    letter-spacing: 0.05rem;
+}
+
+.conteudo {
+    font-family: "inter", serif;
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+    margin: 0;
+
+}
+
+.conteudo .h2 {
+    font-size: 96px;
+}
+
+.alimentos,
+.objetos,
+.roupas {
+    display: inline;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 3rem;
+    text-align: center;
+    font-family: "inter", serif;
+}
+
+.alimentos img,
+.objetos img,
+.roupas img {
+    width: 100%;
+    max-width: 300px;
+    max-height: 400px;
+    height: auto;
+    border-radius: 12px;
+    gap: 1rem;
+}
+
+.footer {
+    display: flex;
+    justify-content: center;
+    color: var(--purple-color);
+    font-family: "inter", serif;
+}
+
+
+/*################### RESPONSIVIDADE #######################################*/
+
+/* Tablet (768px a 1024px) */
+@media (max-width: 1024px) {
+    .header {
+        padding: 12px 30px;
+        gap: 2rem;
+    }
+
+    .logo-image {
+        width: 400px;
+    }
+
+    .header .navbar button a {
+        font-size: 16px;
+        padding: 0.6rem 1rem;
+    }
+
+    .titulo h1 {
+        font-size: 60px;
+    }
+
+    .conteudo h2 {
+        font-size: 28px;
+    }
+
+    .alimentos,
+    .objetos,
+    .roupas {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .alimentos img,
+    .objetos img,
+    .roupas img {
+        width: 100%;
+        max-width: 200px;
+        max-height: 150px;
+        height: auto;
+        border-radius: 12px;
+        gap: 1rem;
+    }
+}
+
+/* Mobile (até 768px) */
+@media (max-width: 768px) {
+    .header {
+        flex-direction: flex;
+        padding: 10px 20px;
+        gap: 3rem;
+    }
+
+    .logo-image {
+        width: 350px;
+    }
+
+    .header .navbar {
+        width: 100%;
+        justify-content: center;
+        gap: 1rem;
+    }
+
+    .header .navbar button a {
+        font-size: 16px;
+        padding: 0.5rem 0.8rem;
+        justify-content: center;
+    }
+
+    .grid-container {
+        grid-template-areas:
+            "header"
+            "titulo"
+            "conteudo"
+            "alimentos"
+            "objetos"
+            "roupas"
+            "footer";
+
+        grid-template-columns: 1fr;
+        padding-top: 140px;
+        /* Mais espaço para header em coluna */
+        gap: 30px;
+    }
+
+    .titulo h1 {
+        font-size: 60px;
+    }
+
+    .titulo .btn-doar,
+    .titulo .btn-retirar {
+        width: 100vh;
+        max-width: 100%;
+        font-size: 16px;
+        padding: 0.8rem 1.5rem;
+    }
+
+    /* Remove hover no mobile */
+    .titulo .btn-doar:hover,
+    .titulo .btn-retirar:hover {
+        transform: none;
+    }
+
+    .alimentos,
+    .objetos,
+    .roupas {
+        padding: 15px;
+        margin: 0;
+        width: 90%;
+        margin-bottom: 0%;
+    }
+
+    .alimentos img,
+    .objetos img,
+    .roupas img {
+        max-width: 220px;
+        height: 200px;
+        margin-bottom: 0%;
+    }
+
+    .alimentos h2,
+    .objetos h2,
+    .roupas h2 {
+        font-size: 1.5rem;
+    }
+}
+
+/* Mobile pequeno (até 480px) */
+@media (max-width: 480px) {
+    .header {
+        padding: 10px 15px;
+    }
+
+    .logo-image {
+        width: 50px;
+    }
+
+    .header .navbar button a {
+        font-size: 12px;
+        padding: 0.4rem 0.6rem;
+    }
+
+    .grid-container {
+        padding-top: 55px;
+        gap: 10px;
+        margin-bottom: 0%;
+    }
+
+    .titulo h1 {
+        font-size: 36px;
+        margin-bottom: 0%;
+    }
+
+    .titulo .btn-doar,
+    .titulo .btn-retirar {
+        font-size: 14px;
+        padding: 0.7rem 1.2rem;
+        max-width: 240px;
+
+    }
+
+    .conteudo h2 {
+        font-size: 20px;
+    }
+
+    .alimentos img,
+    .objetos img,
+    .roupas img {
+        max-width: 180px;
+        height: 160px;
+        margin-bottom: 0%;
+    }
+
+    .footer {
+        font-size: 12px;
+        margin-top: 0%;
+        display: flex;
+    }
+}
+
+/* ainda faltam algumas configurações de responsividade na parte das imagens*/
+
+/*############################################################### ABOUT.HTML######################################################################################*/
+
+.grid-about {
+    display: grid;
+    grid-template-areas:
+        "header"
+        "titulo"
+        "historia"
+        "texto"
+        "footer";
+
+    grid-template-columns: 1fr;
+    grid-template-rows:
+
+        /*header*/
+        80px
+        /*titulo*/
+        200px
+        /*conteudo*/
+        400px
+        /*texto*/
+        450px
+        /*footer*/
+        100px;
+
+    gap: 40px;
+    min-height: 100vh;
+    padding: 60px;
+}
+/*definindo as areas*/
+.titulo-about {
+    grid-area: titulo;
+}
+
+.historia-about {
+    grid-area: historia;
+}
+
+.texto-about {
+    grid-area: texto;
+}
+
+.footer {
+    grid-area: footer;
+}
+
+/*especificar o estilo de cada area*/
+.titulo-about {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.titulo-about h1 {
+    font-family: "playfair display", serif;
+    color: var(--red-color);
+    font-size: 110px;
+    padding: 40px;
+    margin: auto;
+}
+
+.historia-about {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 1rem;
+    padding: 20px;
+    margin-bottom: 0%;
+}
+
+.historia-about img {
+    width: 100%;
+    max-width: 450px;
+    height: auto;
+    border-radius: 12px;
+    background-color: rgba(238, 230, 230, 0.5);
+}
+
+.historia-about h2 {
+    font-family: "playfair display", serif;
+    color: var(--red-color);
+    font-size: 50px;
+    flex-direction: column;
+    gap: 1.5rem;
+    display: block;
+}
+
+.historia-about p {
+    font-size: 25px;
+    line-height: 1.6;
+    font-family: "inter", serif;
+    color: black;
+    display: block;
+}
+
+.texto-about {
+    display: flex;
+    justify-content: left;
+    align-items: justify;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 60px;
+}
+
+.texto-about h2 {
+    font-family: "playfair display", serif;
+    color: var(--red-color);
+    font-size: 50px;
+    flex-direction: column;
+    gap: 1.5rem;
+    display: block;
+}
+
+.texto-about p {
+    font-size: 25px;
+    line-height: 1.6;
+    font-family: "inter", serif;
+    color: black;
+    display: flex;
+    margin-left: 20px;
+}
+
+.galeria-imagens {
+    display: flex;
+    flex-direction: row; /* Imagens lado a lado */
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap; /* Quebra para próxima linha em telas pequenas */
+    margin-top: 30px;
+}
+
+.imagem-galeria {
+    width: 100%;
+    max-width: 150px;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+}
+
+/* Footer */
+.grid-about .footer {
+    grid-area: footer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    font-family: "inter", serif;
+    padding: 20px;
+}
+/*o footer não está aparecendo na parte de about*/
