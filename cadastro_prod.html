@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DESAPEGO</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styleCad.css">
 </head>
 
 <body>
@@ -13,20 +13,18 @@
         <header>
             <div class="logo">
                 <a href="#" class="logo-link">
-                    <img src="img/logosemfundo350px.png" alt="Logo do site" class="logo-image">
+                    <img src="img/logo_menor.png" alt="Logo do site" class="logo-image">
                 </a>
             </div>
-            <nav>
-                <button>
-                    <a href="">Voltar</a>
-                </button>
-            </nav>
         </header>
+        <main>
         <article class="intro">
-            <p>Olá, Desapeger</p>
-            <p>Para circular seu produto, responda os campos abaixo.
-                Partiu desapegar! ;) </p>
+            <p>Olá, Desapeger
+                <br>
+            Para circular seu produto, responda os campos abaixo.
+            <br>Partiu desapegar! ;) </p>
         </article>
+        <hr>
         <form action="" name="cad-user">
             <div class="form-group">
                 <label for="nome">Nome Completo:</label>
@@ -75,39 +73,39 @@
                     <input type="text" id="cep" name="cep">
                 </div>
 
-                <fieldset>
-                    <legend>Estado:</legend>
-                    <div class="grid-estados">
-                        <div><input type="radio" id="ac" name="estado" value="AC" checked><label for="ac">AC</label>
-                        </div>
-                        <div><input type="radio" id="al" name="estado" value="AL"><label for="al">AL</label></div>
-                        <div><input type="radio" id="ap" name="estado" value="AP"><label for="ap">AP</label></div>
-                        <div><input type="radio" id="am" name="estado" value="AM"><label for="am">AM</label></div>
-                        <div><input type="radio" id="ba" name="estado" value="BA"><label for="ba">BA</label></div>
-                        <div><input type="radio" id="ce" name="estado" value="CE"><label for="ce">CE</label></div>
-                        <div><input type="radio" id="df" name="estado" value="DF"><label for="df">DF</label></div>
-                        <div><input type="radio" id="es" name="estado" value="ES"><label for="es">ES</label></div>
-                        <div><input type="radio" id="go" name="estado" value="GO"><label for="go">GO</label></div>
-                        <div><input type="radio" id="ma" name="estado" value="MA"><label for="ma">MA</label></div>
-                        <div><input type="radio" id="mt" name="estado" value="MT"><label for="mt">MT</label></div>
-                        <div><input type="radio" id="ms" name="estado" value="MS"><label for="ms">MS</label></div>
-                        <div><input type="radio" id="mg" name="estado" value="MG"><label for="mg">MG</label></div>
-                        <div><input type="radio" id="pa" name="estado" value="PA"><label for="pa">PA</label></div>
-                        <div><input type="radio" id="pb" name="estado" value="PB"><label for="pb">PB</label></div>
-                        <div><input type="radio" id="pr" name="estado" value="PR"><label for="pr">PR</label></div>
-                        <div><input type="radio" id="pe" name="estado" value="PE"><label for="pe">PE</label></div>
-                        <div><input type="radio" id="pi" name="estado" value="PI"><label for="pi">PI</label></div>
-                        <div><input type="radio" id="rj" name="estado" value="RJ"><label for="rj">RJ</label></div>
-                        <div><input type="radio" id="rn" name="estado" value="RN"><label for="rn">RN</label></div>
-                        <div><input type="radio" id="rs" name="estado" value="RS"><label for="rs">RS</label></div>
-                        <div><input type="radio" id="ro" name="estado" value="RO"><label for="ro">RO</label></div>
-                        <div><input type="radio" id="rr" name="estado" value="RR"><label for="rr">RR</label></div>
-                        <div><input type="radio" id="sc" name="estado" value="SC"><label for="sc">SC</label></div>
-                        <div><input type="radio" id="sp" name="estado" value="SP"><label for="sp">SP</label></div>
-                        <div><input type="radio" id="se" name="estado" value="SE"><label for="se">SE</label></div>
-                        <div><input type="radio" id="to" name="estado" value="TO"><label for="to">TO</label></div>
-                    </div>
-                </fieldset>
+                <div class="form-group">
+                <label>Estado:</label>
+                <select id="estado" name="estado" class="grid-estados">
+                    <option value="" disabled selected>Selecione seu estado</option>
+                    <option id="ac" value="AC">AC</option>
+                    <option id="al" value="AL">AL</option>
+                    <option id="ap" value="AP">AP</option>
+                    <option id="am" value="AM">AM</option>
+                    <option id="ba" value="BA">BA</option>
+                    <option id="ce" value="CE">CE</option>
+                    <option id="df" value="DF">DF</option>
+                    <option id="es" value="ES">ES</option>
+                    <option id="go" value="GO">GO</option>
+                    <option id="ma" value="MA">MA</option>
+                    <option id="mt" value="MT">MT</option>
+                    <option id="ms" value="MS">MS</option>
+                    <option id="mg" value="MG">MG</option>
+                    <option id="pa" value="PA">PA</option>
+                    <option id="pb" value="PB">PB</option>
+                    <option id="pr" value="PR">PR</option>
+                    <option id="pe" value="PE">PE</option>
+                    <option id="pi" value="PI">PI</option>
+                    <option id="rj" value="RJ">RJ</option>
+                    <option id="rn" value="RN">RN</option>
+                    <option id="rs" value="RS">RS</option>
+                    <option id="ro" value="RO">RO</option>
+                    <option id="rr" value="RR">RR</option>
+                    <option id="sc" value="SC">SC</option>
+                    <option id="sp" value="SP">SP</option>
+                    <option id="se" value="SE">SE</option>
+                    <option id="to" value="TO">TO</option>
+                </select>
+                </div>
                 <fieldset class="container-image">
                     <legend>Adicione até 3 imagens do produto</legend>
                     <div id="previewContainer">
@@ -125,9 +123,10 @@
 
                 </fieldset>
                 <div class="form-actions">
+                    <input type="submit" id="voltar" value="Voltar">
                     <input type="submit" id="entrar" value="Cadastrar">
                 </div>
-        </form>
+            </form>
         <div id="alerta">
             <p id="alertaNome"></p>
             <p id="alertaIdade"></p>
@@ -135,6 +134,7 @@
             <p id="alertaCpf"></p>
             <p id="sucesso"></p>
         </div>
+        </main>
         <footer class="footer">
             <p class="left-footer">&copy; 2026 DESAPEGO - Todos os direitos reservados
             </p>

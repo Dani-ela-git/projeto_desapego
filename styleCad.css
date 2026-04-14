@@ -1,0 +1,76 @@
+
+body {
+    margin: 0;
+    padding: 0;
+    text-decoration: none;
+    font-family: "inter", serif;
+    font-size: 16px;
+}
+/*################################################################*/
+/*###################      Paginas de Login   ###################*/
+
+.container-login {
+    display: grid;
+    grid-template-columns: minmax(300px, 600px);
+    min-height: 100vh;
+    gap: 20px;
+    padding: 20px;
+    /*grid-template-areas: 
+    "header header header",
+    ". main ."
+    "footer footer footer";*/
+
+    justify-content: center;
+    align-content: center;
+}
+header, main, footer {
+    grid-column: 1; 
+    width: 100%;
+}
+
+header {
+    margin: 0;
+    padding: 10px;
+    height: 20vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+main {
+    border: #c2c2c2 solid;
+    box-shadow: #797878;
+    border-radius: 10px;
+    padding: 30px; 
+
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-evenly;
+
+}
+
+.intro {
+    justify-content: center;
+    align-items: center;
+
+    margin-bottom: 10px;
+}
+.form-group  {
+    margin: 10px 0;
+    gap: 10px;
+}
+
+.form-actions {
+    margin-top: 10px;
+    display: flex;
+    justify-content: space-evenly ;
+}
+.footer {
+    display: flex;
+    justify-content: center;
+    color: var(--purple-color);
+    font-family: "inter", serif;
+}
