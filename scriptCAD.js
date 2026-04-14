@@ -39,7 +39,7 @@ class Produto {
 }
 
 class Usuario {
-    constructor(nome,  cpf, endereco) {
+    constructor(nome, cpf, endereco) {
         this.nome = nome;
         this.cpf = cpf;
         this.endereco = endereco;
@@ -48,7 +48,7 @@ class Usuario {
     //validando os campos 
     static validaNome(nome) {
         const regexNome = /^[A-Za-zÀ-ÖØ-öø-ÿ ]+$/;
-        return regexNome.test(nome) && nome.trim().split("/|s+/").legth >= 2;
+        return regexNome.test(nome) && nome.trim().split(/\s+/).length >= 2;
     }
     static validaCPF(cpf) {
         const regexCPF = /^\d{3}\.\d{3}\.\d{3}\-\d{2}$/;
@@ -63,132 +63,170 @@ class Usuario {
 }
 
 //EVENTOs - escuta
+const flagNome = document.getElementById('nome');
+if (flagNome) {
+    flagNome.addEventListener('focusout', function () {
 
-document.getElementById('nome').addEventListener('focusout', function () {
+        if (!Usuario.validaNome(this.value)) {
+            document.getElementById('alertaNome').textContent = 'Nome Inválido!'
+        }
+        else {
+            document.getElementById('alertaNome').textContent = ''
+        }
 
-    if (!Usuario.validaNome(this.value)) {
-        document.getElementById('alertaNome').textContent = 'Nome Inválido!'
-    }
-    else {
-        document.getElementById('alertaNome').textContent = ''
-    }
+    });
+}
+const flagCPF = document.getElementById('cpf');
+if (flagCPF) {
+    flagCPF.addEventListener('focusout', function () {
+        if (!Usuario.validaCPF(this.value)) {
+            document.getElementById('alertaCpf').textContent = 'CPF inválido! Use o formato: 000.000.000-00.'
+        } else {
+            document.getElementById('alertaCpf').textContent = ''
+        }
+    });
+}
+const flagCEP = document.getElementById('cep');
+if (flagCEP) {
+    flagCEP.addEventListener('focusout', function () {
+        if (!Endereco.validaCEP(this.value)) {
+            document.getElementById('alertaCEP').textContent = 'CEP inválido! Use o formato: 00000-00.'
+        } else {
+            document.getElementById('alertaCEP').textContent = ''
+        }
+    });
+}
+const flagDescri = document.getElementById('descricao');
+if (flagDescri) {
 
-});
-document.getElementById('cpf').addEventListener('focusout', function () {
-    if (!Usuario.validaCPF(this.value)) {
-        document.getElementById('alertaCpf').textContent = 'CPF inválido! Use o formato: 000.000.000-00.'
-    } else {
-        document.getElementById('alertaCpf').textContent = ''
-    }
-});
-document.getElementById('cep').addEventListener('focusout', function () {
-    if (!Endereco.validaCEP(this.value)) {
-        document.getElementById('alertaCEP').textContent = 'CEP inválido! Use o formato: 00000-00.'
-    } else {
-        document.getElementById('alertaCEP').textContent = ''
-    }
-});
-document.getElementById('descricao').addEventListener('focusout', function(){
-     if (!Endereco.validaTexto(this.value)) {
-        document.getElementById('alertaDescricao').textContent = 'Adicione mais detalhes sobre o produto!'
-    } else {
-        document.getElementById('alertaCEP').textContent = ''
-    }
-});
-document.getElementById('cadUser').addEventListener('click', function (event) {
-    event.preventDefault()
+    flagDescri.addEventListener('focusout', function () {
+        if (!Endereco.validaTexto(this.value)) {
+            document.getElementById('alertaDescricao').textContent = 'Adicione mais detalhes sobre o produto!'
+        } else {
+            document.getElementById('alertaDescricao').textContent = ''
+        }
+    });
+}
+const flagCadUser = document.getElementById('cadUser');
+if (flagCadUser) {
+    flagCadUser.addEventListener('click', function (event) {
+        event.preventDefault()
 
-    const nomeValue = document.getElementById('nome').value
-    const cpfValue = document.getElementById('cpf').value
-    const cepValue = document.getElementById('cep').value;
-    const idadeValue =  document.getElementById('idade').value;
+        const nomeValue = document.getElementById('nome').value
+        const cpfValue = document.getElementById('cpf').value
+        const cepValue = document.getElementById('cep').value;
+        const idadeValue = document.getElementById('idade').value;
 
-    const isNomeOk = Usuario.validaNome(nomeValue);
-    const isCpfOk = Usuario.validaCPF(cpfValue);
-    const isIdadeOk = Usuario.validaIdade(idadeValue);
-    const isCepOk = Endereco.validaCEP(cepValue);
-    
-    if (isNomeOk && isCpfOk &&isIdadeOk && isCepOk) {
-        // Criando os objetos após validação bem-sucedida
-        const end = new Endereco(
-            document.getElementById('rua').value,
-            document.getElementById('numero').value,
-            document.getElementById('bairro').value,
-            document.getElementById('complemento').value,
-            document.getElementById('cidade').value,
-            document.getElementById('estado').value,
-            cepValue
-        );
+        const isNomeOk = Usuario.validaNome(nomeValue);
+        const isCpfOk = Usuario.validaCPF(cpfValue);
+        const isIdadeOk = Usuario.validaIdade(idadeValue);
+        const isCepOk = Endereco.validaCEP(cepValue);
 
-        const user = new Usuario(
-            nomeValue,
-            cpfValue,
-            end
-        );
+        if (isNomeOk && isCpfOk && isIdadeOk && isCepOk) {
+            // Criando os objetos após validação bem-sucedida
+            const end = new Endereco(
+                document.getElementById('rua').value,
+                document.getElementById('numero').value,
+                document.getElementById('bairro').value,
+                document.getElementById('complemento').value,
+                document.getElementById('cidade').value,
+                document.getElementById('estado').value,
+                cepValue
+            );
 
-        console.log("Objeto Usuário pronto para envio:", user);
-        document.getElementById('sucesso').textContent = 'Formulário enviado com sucesso!';
-    } else {
-        alert("Corrija os campos antes de enviar!");
-    }
-});
+            const user = new Usuario(
+                nomeValue,
+                cpfValue,
+                end
+            );
 
-document.getElementById('cadProd').addEventListener('click', function (event) {
-    event.preventDefault()
+            console.log("Objeto Usuário pronto para envio:", user);
+            // Feedback visual
+            const msgSucesso = document.getElementById('sucesso');
+            msgSucesso.textContent = 'Formulário enviado com sucesso!';
+            msgSucesso.style.color = 'green';
+        } else {
+            alert("Corrija os campos antes de enviar!");
+        }
+    });
+}
+const flagCadProd = document.getElementById('cadProd');
+if (flagCadProd) {
+    flagCadProd.addEventListener('click', function (event) {
+        event.preventDefault()
 
-    // Usuário
-    const nomeValue = document.getElementById('nome').value;
-    const cpfValue = document.getElementById('cpf').value;
+        // Usuário
+        const nomeValue = document.getElementById('nome').value;
+        const cpfValue = document.getElementById('cpf').value;
 
-    //descricao
-    const titValue = document.getElementById('titulo').value
-    const descValue = document.getElementById('descricao').value
-    
-    //endereco
-    const ruaValue = document.getElementById('rua').value;
-    const numValue = document.getElementById('numero').value;
-    const bairroValue = document.getElementById('bairro').value;
-    const cityValue = document.getElementById('cidade').value;
-    const compValue = document.getElementById('complemento').value;
-    const cepValue = document.getElementById('cep').value;
-    const estadoValue = document.getElementById('estado').value;
+        //descricao
+        const titValue = document.getElementById('titulo').value
+        const descValue = document.getElementById('descricao').value
 
-    //validação por metodos
-    const isNomeOk = Usuario.validaNome(nomeValue);
-    const isCpfOk = Usuario.validaCPF(cpfValue);
-    const isCepOk = Endereco.validaCEP(cepValue);
-    const isTituloOk = Produto.validaTitulo(titValue);
-    const isDescOk = Produto.validaDescricao(descValue);
+        //endereco
+        const ruaValue = document.getElementById('rua').value;
+        const numValue = document.getElementById('numero').value;
+        const bairroValue = document.getElementById('bairro').value;
+        const cityValue = document.getElementById('cidade').value;
+        const compValue = document.getElementById('complemento').value;
+        const cepValue = document.getElementById('cep').value;
+        const estadoValue = document.getElementById('estado').value;
 
-    if(isNomeOk && isCpfOk && isCepOk && isTituloOk && isDescOk) {
-        
-        //cria o endereco
-        const end = new Endereco(ruaValue, numValue, bairroValue, compValue, cityValue, estadoValue, cepValue);
+        //validação por metodos
+        const isNomeOk = Usuario.validaNome(nomeValue);
+        const isCpfOk = Usuario.validaCPF(cpfValue);
+        const isCepOk = Endereco.validaCEP(cepValue);
+        const isTituloOk = Produto.validaTitulo(titValue);
+        const isDescOk = Produto.validaDescricao(descValue);
 
-        //vincula ao usuario
-        const user = new Usuario(nomeValue, cpfValue, end);
+        if (isNomeOk && isCpfOk && isCepOk && isTituloOk && isDescOk) {
 
-        //armazena as imagens - (Transformando a lista de inputs em um array de arquivos)
-        const fotosValidas = [];
-        document.querySelectorAll('.input-file').forEach(input => {
-            if (input.files[0]) fotosValidas.push(input.files[0]);
-        });
+            //cria o endereco
+            const end = new Endereco(ruaValue, numValue, bairroValue, compValue, cityValue, estadoValue, cepValue);
 
-        //vincula as infos à um Produto
-        const novoProduto = new Produto(titValue, descValue, fotosValidas, user);
+            //vincula ao usuario
+            const user = new Usuario(nomeValue, cpfValue, end);
 
-        console.log("SUCESSO! Produto pronto para o banco de dados:", novoProduto);
-        
-        // Feedback visual
-        const msgSucesso = document.getElementById('sucesso');
-        msgSucesso.textContent = 'Anúncio publicado com sucesso!';
-        msgSucesso.style.color = 'green';
+            //armazena as imagens - (Transformando a lista de inputs em um array de arquivos)
+            const fotosValidas = [];
+            document.querySelectorAll('.input-file').forEach(input => {
+                if (input.files[0]) fotosValidas.push(input.files[0]);
+            });
 
-    } else {
-        alert("Por favor, verifique os campos em vermelho ou com erro.");
-    }
-});
+            //vincula as infos à um Produto
+            const novoProduto = new Produto(titValue, descValue, fotosValidas, user);
 
+            console.log("SUCESSO! Produto pronto para o banco de dados:", novoProduto);
+
+            // Feedback visual
+            const msgSucesso = document.getElementById('sucesso');
+            msgSucesso.textContent = 'Anúncio publicado com sucesso!';
+            msgSucesso.style.color = 'green';
+
+        } else {
+            alert("Por favor, verifique os campos em vermelho ou com erro.");
+        }
+    });
+}
+const flagLogin = document.getElementById('login');
+if (flagLogin) {
+    flagLogin.addEventListener('click', function (event) {
+        event.preventDefault()
+
+        const cpfValue = document.getElementById('cpf').value;
+        const isCpfOk = Usuario.validaCPF(cpfValue);
+
+        if (isCpfOk) {
+            console.log("Cfp foi verificado");
+            // Feedback visual
+            const msgSucesso = document.getElementById('sucesso');
+            msgSucesso.textContent = 'CFP Validado!';
+            msgSucesso.style.color = 'green';
+        } else {
+            alert("Corrija os campos antes de enviar!");
+        }
+    });
+}
 // Seleciona todos os inputs de arquivo
 const inputs = document.querySelectorAll('.input-file');
 
