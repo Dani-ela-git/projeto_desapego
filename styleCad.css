@@ -1,4 +1,12 @@
 
+:root {
+    --yellow-color: #f9c80eff;
+    --red-color: #e0161dff;
+    --terracota-color: #f55231ff;
+    --pink-color: #ff26b0ff;
+    --purple-color: #49416dff;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -57,17 +65,18 @@ main {
 
 }
 
-.intro {
+.intro{
     justify-content: center;
     align-items: center;
     font-size: 20px;
     margin-bottom: 10px;
+    font-weight: bold;
 }
 
 
 .endereco {
     display: grid;
-    grid-template-columns: 3fr 1fr;
+    grid-template-columns: 4fr 120px;
     gap: 15px;
     width: 100%;
 }
@@ -121,8 +130,8 @@ textarea {
     max-width: 200px;
 }
 .btn {
-    padding: 5px 10px;
-    font-size: 13px;
+    padding: 12px 20px;
+    font-size: 15px;
     font-weight: bold;
     border-radius: 10px;
     cursor: pointer;
@@ -131,8 +140,8 @@ textarea {
 }
 
 #entrar {
-    background-color: #f7d030; /* Destaque no botão principal */
-    border-color: #f7d030;
+    background-color: #f9c80eff; /* Destaque no botão principal */
+    border-color: #f9c80eff;
 }
 
 #voltar {
@@ -143,6 +152,10 @@ textarea {
     background-color: #eee;
 }
 
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #f9c80eff; 
+}
 .container-image {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
