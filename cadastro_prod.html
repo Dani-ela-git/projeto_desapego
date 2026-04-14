@@ -37,15 +37,17 @@
             </div>
 
             <div class="form-group">
-                <label for="desricao">Descrição do produto:</label>
+                <label for="desricao" ">Descrição do produto:</label>
                 <input type="text" id="descricao" name="descricao">
             </div>
-
-            <hr>
             <div class="endereco">
                 <div class="form-group">
                     <label for="rua">Rua:</label>
                     <input type="text" id="rua" name="rua">
+                </div>
+                <div class="group-number">
+                    <label for="numero">Número:</label>
+                    <input type="text" id="numero" name="numero">
                 </div>
 
                 <div class="form-group">
@@ -53,9 +55,9 @@
                     <input type="text" id="bairro" name="bairro">
                 </div>
 
-                <div class="form-group">
-                    <label for="numero">Número:</label>
-                    <input type="text" id="numero" name="numero">
+                <div class="group-number">
+                    <label for="cep">CEP:</label>
+                    <input type="text" id="cep" name="cep">
                 </div>
 
                 <div class="form-group">
@@ -66,11 +68,6 @@
                 <div class="form-group">
                     <label for="cidade">Cidade:</label>
                     <input type="text" id="cidade" name="cidade">
-                </div>
-
-                <div class="form-group">
-                    <label for="cep">CEP:</label>
-                    <input type="text" id="cep" name="cep">
                 </div>
 
                 <div class="form-group">
@@ -106,6 +103,7 @@
                     <option id="to" value="TO">TO</option>
                 </select>
                 </div>
+                </div>
                 <fieldset class="container-image">
                     <legend>Adicione até 3 imagens do produto</legend>
                     <div id="previewContainer">
@@ -123,8 +121,8 @@
 
                 </fieldset>
                 <div class="form-actions">
-                    <input type="submit" id="voltar" value="Voltar">
-                    <input type="submit" id="entrar" value="Cadastrar">
+                    <button type="button" id="voltar" class="btn" value="Voltar">Voltar</button>
+                    <input type="submit" id="entrar"  class="btn" value="Cadastrar">
                 </div>
             </form>
         <div id="alerta">

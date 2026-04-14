@@ -19,7 +19,7 @@ body {
     "header header header",
     ". main ."
     "footer footer footer";*/
-
+    justify-items: center;
     justify-content: center;
     align-content: center;
 }
@@ -38,35 +38,128 @@ header {
     justify-content: space-around;
 }
 
+main form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+
+}
+
 main {
-    border: #c2c2c2 solid;
-    box-shadow: #797878;
+    border: 1px #c2c2c2 solid;
     border-radius: 10px;
     padding: 30px; 
 
-    display: flex;
-    flex-direction: column;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    justify-content: space-evenly;
+    width: 100%;
+    max-width: 600px;
+    box-sizing: border-box;
 
 }
 
 .intro {
     justify-content: center;
     align-items: center;
-
+    font-size: 20px;
     margin-bottom: 10px;
 }
-.form-group  {
-    margin: 10px 0;
-    gap: 10px;
+
+
+.endereco {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    gap: 15px;
+    width: 100%;
+}
+
+
+.form-group, .group-number  {
+    margin: 5px 0;
+    
+}
+
+
+label {
+    margin-top: 15px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: #242424;
+}
+
+
+input[type="text"], 
+input[type="number"], 
+select, 
+textarea {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box; 
+}
+#descricao {
+    
+    height: 100px;
+    resize: vertical;
+    font-family: inherit;
 }
 
 .form-actions {
     margin-top: 10px;
+    
     display: flex;
-    justify-content: space-evenly ;
+    justify-content: center;
+    gap: 20px;
+    width: 100%;
+}
+
+.form-actions .btn,
+.form-actions input {
+    grid-column: auto;
+    flex: 1;
+    max-width: 200px;
+}
+.btn {
+    padding: 5px 10px;
+    font-size: 13px;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    border: 1px solid #c2c2c2;
+    transition: 0.3s;
+}
+
+#entrar {
+    background-color: #f7d030; /* Destaque no botão principal */
+    border-color: #f7d030;
+}
+
+#voltar {
+    background-color: transparent;
+}
+
+#voltar:hover {
+    background-color: #eee;
+}
+
+.container-image {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 15px;
+    width: 100%;
+    padding: 10px;
+
+    border: 1px solid #c2c2c2;
+    border-radius: 6px;
+}
+
+.preview-container {
+    background-color: #ccc;
+    padding: 10px;
+    border: 1px solid #c2c2c2;
+    border-radius: 6px;
+
 }
 .footer {
     display: flex;
