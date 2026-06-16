@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DESAPEGO</title>
+    <link rel="stylesheet" href="styleCad.css">
+    <script src="api-config.js"></script>
+    <script src="script.js"></script>
+</head>
+
+<body>
+    <section class="container-login">
+        <header>
+            <div class="logo">
+                <a href="#" class="logo-link">
+                    <img src="img/logo_menor.png" alt="Logo do site" class="logo-image">
+                </a>
+            </div>
+        </header>
+        <main>
+            <article class="intro">
+                <p>Olá, Desapeger!
+                    <br>Digite abaixo a sua identificação:
+                </p>
+            </article>
+            <hr>
+            <form action="" name="login">
+                <div class="form-group">
+                    <label for="cpf">CPF:</label>
+                    <input type="text" id="cpf" name="cpf">
+                </div>
+                <div class="form-actions">
+                    <a href="index.html">
+                        <button type="button" id="voltar" class="btn" value="Voltar">Voltar</button>
+                    </a>
+                    <input type="submit" id="login" class="btn" value="Login">
+                </div>
+            </form>
+            <div id="alerta">
+                <p id="alertaCPF"></p>
+                <p id="sucesso"></p>
+                <p id="voltar"></p>
+            </div>
+        </main>
+        <footer class="footer">
+            <p class="left-footer">&copy; 2026 DESAPEGO - Todos os direitos reservados
+            </p>
+        </footer>
+    </section>
+    <script src="scriptCAD.js"></script>
+</body>
