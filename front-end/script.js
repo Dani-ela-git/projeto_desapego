@@ -66,3 +66,115 @@ document.addEventListener('DOMContentLoaded', function () {  // CORRIGIDO: tinha
         });
     }
 });
+
+
+
+// gambiaeea
+// var global para guardar todos os produtos do JSON
+let todosOsProdutos = [];
+// Nova variável global para controlar qual categoria está ativa no momento
+let categoriaAtiva = ""; 
+
+const inputNome = document.getElementById('nome-produto');          // nome do produto
+const selectCategoria = document.getElementById('dropdownMenu');     // O container/botão do seu dropdown
+const inputEndereco = document.getElementById('input-endereco');    // endereço
+const botaoBuscar = document.getElementById('botao-buscar');        // buscar
+const containerResultados = document.getElementById('resultados');  // visor dos resultados
+
+// carrega o arquivo JSON
+async function carregarProdutos() {
+  try {
+    const resposta = await fetch('mock.json'); // Lendo o seu arquivo mock.json
+    todosOsProdutos = await resposta.json();
+    
+    // mostra todos os produtos assim que a página carregar
+    renderizarProdutos(todosOsProdutos);
+  } catch (erro) {
+    console.error("Erro ao carregar os dados dos produtos:", erro);
+  }
+}
+
+// ESTA FUNÇÃO SERÁ CHAMADA PELO ONCLICK DOS SEUS LINKS <a>
+function selecionarCategoriaViaMenu(nomeDaCategoria) {
+  categoriaAtiva = nomeDaCategoria; // Atualiza a categoria global com o que foi clicado
+
+  // Opcional: Atualiza o texto do botão principal do dropdown para o usuário ver o que selecionou
+  const btnTexto = document.querySelector('.Categoria span');
+  if (btnTexto) {
+    btnTexto.innerText = nomeDaCategoria === "" ? "Categoria" : nomeDaCategoria;
+  }
+
+  // Dispara o filtro imediatamente após a escolha
+  filtrarProdutos();
+}
+
+// filtra os dados com base nos inputs da tela
+function filtrarProdutos() {
+  const buscaNome = inputNome.value.toLowerCase();
+  // Agora lemos a nossa variável controlada pelo clique, não mais o ".value" que dava erro
+  const buscaCategoria = categoriaAtiva; 
+  const buscaEndereco = inputEndereco.value.toLowerCase();
+
+  const produtosFiltrados = todosOsProdutos.filter(produto => {
+    // Verifica se o nome do produto contém o que foi digitado
+    const bateNome = produto.nome.toLowerCase().includes(buscaNome);
+    
+    // Se não selecionou categoria (vazio), ignora o filtro. Se selecionou, precisa ser igual.
+    const bateCategoria = buscaCategoria === "" || produto.categoria === buscaCategoria;
+    
+    // Verifica se o endereço contém o termo digitado
+    const bateEndereco = produto.endereco.toLowerCase().includes(buscaEndereco);
+
+    // O produto só aparece se passar nos 3 filtros ao mesmo tempo
+    return bateNome && bateCategoria && bateEndereco;
+  });
+
+  // Atualiza a tela com o resultado do filtro
+  renderizarProdutos(produtosFiltrados);
+}
+
+// exibe os produtos na tela 
+function renderizarProdutos(lista) {
+  // Limpa os resultados anteriores
+  containerResultados.innerHTML = "";
+
+  // Se a busca não retornar nada, aplica a estratégia de "Busca Vazia"
+  if (lista.length === 0) {
+    containerResultados.innerHTML = `
+      <div class="sem-resultados">
+        <p>Nenhum produto encontrado para essa combinação de filtros.</p>
+        <small>Tente mudar a categoria ou digitar outro termo!</small>
+      </div>
+    `;
+    return;
+  }
+
+  // Se houver resultados, cria o HTML de cada um deles
+  lista.forEach(produto => {
+    const card = document.createElement('div');
+    card.className = 'card-produto'
+    card.innerHTML = `
+    <img src="${produto.img}" alt="Imagem do produto ${produto.nome}" class="imagem-produto">
+    <h3>${produto.nome}</h3>
+    <p class="categoria">🏷️ ${produto.categoria}</p>
+    <p class="endereco">📍 ${produto.endereco}</p>
+    <p class="preco">R$ ${produto.preco.toFixed(2)}</p>
+  `;
+    containerResultados.appendChild(card);
+  });
+}
+
+// Se o usuário clicar no botão da lupa, também roda o filtro
+if (botaoBuscar) {
+  botaoBuscar.addEventListener('click', (e) => {
+    e.preventDefault(); // Evita que o formulário recarregue a página
+    filtrarProdutos();
+  });
+}
+
+// Filtrar em tempo real enquanto o usuário digita nos campos de texto
+inputNome.addEventListener('input', filtrarProdutos);
+inputEndereco.addEventListener('input', filtrarProdutos);
+
+// Inicializar o sistema ao carregar a página
+carregarProdutos();

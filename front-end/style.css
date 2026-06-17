@@ -239,6 +239,14 @@
     gap: 1rem;
 }
 
+
+
+
+
+
+/*seção de pesquisa*/
+
+
 .footer {
     display: flex;
     justify-content: center;
@@ -724,6 +732,50 @@
     display: block;
 }
 
+#resultados {
+    display: grid;
+    /* Cria colunas automáticas com tamanho mínimo de 250px */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 24px; /* Espaçamento idêntico entre os cards */
+    padding: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+
+}
+
+.card-produto{
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column; /* Alinha os itens verticalmente */
+    justify-content: space-between; /* Empurra o preço para o rodapé do card */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
+}
+.card-produto:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+.card-produto img {
+    height: 200px;
+    width: 100%;
+    object-fit:cover;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    background-color: #f5f5f5;
+}
+
+.sem-resultados {
+    grid-column: 1 / -1; /* Ocupa a largura inteira da tela */
+    text-align: center;
+    padding: 40px;
+    color: #777;
+}
 /* Responsivo */
 @media (max-width: 768px) {
     .header-pesquisa {
