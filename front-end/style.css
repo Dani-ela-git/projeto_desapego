@@ -639,6 +639,7 @@
     flex-wrap: wrap; /* Permite quebra em telas menores */
     min-width: 250px;
     position: relative; /*permite o dropdown funcionar*/
+   
 }
 
 .btns-pesquisa .Nome-produto, 

@@ -158,7 +158,7 @@ function renderizarProdutos(lista) {
     <h3>${produto.nome}</h3>
     <p class="categoria">🏷️ ${produto.categoria}</p>
     <p class="endereco">📍 ${produto.endereco}</p>
-    <p class="preco">R$ ${produto.preco.toFixed(2)}</p>
+    
   `;
     containerResultados.appendChild(card);
   });
