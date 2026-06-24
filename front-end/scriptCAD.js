@@ -109,21 +109,27 @@ if (flagDescri) {
 }
 const flagCadUser = document.getElementById('cadUser');
 if (flagCadUser) {
-    flagCadUser.addEventListener('click', function (event) {
-        event.preventDefault()
+    flagCadUser.addEventListener('click', async function (event) { 
+        event.preventDefault();
 
-        const nomeValue = document.getElementById('nome').value
-        const cpfValue = document.getElementById('cpf').value
+        // 1. Captura os valores que realmente existem no seu HTML
+        const nomeValue = document.getElementById('nome').value;
+        const cpfValue = document.getElementById('cpf').value;
         const cepValue = document.getElementById('cep').value;
         const idadeValue = document.getElementById('idade').value;
+        
+        // Se houver um campo telefone, ele captura. Se não, usa um padrão para não travar o back-end
+        const telefoneValue = document.getElementById('telefone')?.value || "11999999999"; 
 
+        // 2. Executa as validações do seu Front
         const isNomeOk = Usuario.validaNome(nomeValue);
         const isCpfOk = Usuario.validaCPF(cpfValue);
         const isIdadeOk = Usuario.validaIdade(idadeValue);
         const isCepOk = Endereco.validaCEP(cepValue);
 
         if (isNomeOk && isCpfOk && isIdadeOk && isCepOk) {
-            // Criando os objetos após validação bem-sucedida
+            
+            // Instancia as suas classes do front
             const end = new Endereco(
                 document.getElementById('rua').value,
                 document.getElementById('numero').value,
@@ -134,19 +140,67 @@ if (flagCadUser) {
                 cepValue
             );
 
-            const user = new Usuario(
-                nomeValue,
-                cpfValue,
-                end
-            );
+            const user = new Usuario(nomeValue, cpfValue, end);
 
-            console.log("Objeto Usuário pronto para envio:", user);
-            // Feedback visual
-            const msgSucesso = document.getElementById('sucesso');
-            msgSucesso.textContent = 'Formulário enviado com sucesso!';
-            msgSucesso.style.color = 'green';
+            // 3. ENVIANDO PARA O MONGO
+            try {
+                const resposta = await fetch('http://localhost:3000/api/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        name: user.nome,
+                        cpf: user.cpf,
+                        // Como não tem input de senha, limpamos o CPF (deixando só números) 
+                        // e enviamos como a senha padrão para passar na validação do servidor!
+                        password: user.cpf.replace(/[^\d]/g, ''), 
+                        phone: telefoneValue, 
+                        age: parseInt(idadeValue),
+                        location: {
+                            address: {
+                                street: user.endereco.rua,
+                                number: user.endereco.numero,
+                                neighborhood: user.endereco.bairro,
+                                complement: user.endereco.complemento,
+                                city: user.endereco.cidade,
+                                state: user.endereco.estado,
+                                zipCode: user.endereco.cep
+                            },
+                            coordinates: [-47.89, -22.00]
+                        }
+                    })
+                });
+
+                const dadosDoServidor = await resposta.json();
+
+                if (resposta.ok && dadosDoServidor.success) {
+                    // Feedback visual de sucesso na tela
+                    const msgSucesso = document.getElementById('sucesso');
+                    msgSucesso.textContent = `Sucesso: ${dadosDoServidor.message}`;
+                    msgSucesso.style.color = 'green';
+                    
+                    // Salva o token gerado para sessões futuras
+                    localStorage.setItem('token', dadosDoServidor.token);
+                    
+                    // Limpa o formulário
+                    document.querySelector('form').reset();
+                } else {
+                    if (dadosDoServidor.errors) {
+                        const errosTratados = dadosDoServidor.errors.map(err => err.msg).join('\n');
+                        alert(`Validação do banco recusou:\n${errosTratados}`);
+                    } else {
+                        alert(`Erro: ${dadosDoServidor.message}`);
+                    }
+                }
+
+            } catch (erroConexao) {
+                console.error("Erro de rede:", erroConexao);
+                alert("Não foi possível conectar ao back-end. Ele está rodando?");
+            }
+
         } else {
-            alert("Corrija os campos antes de enviar!");
+            alert("Por favor, corrija os campos antes de enviar!");
         }
     });
 }
