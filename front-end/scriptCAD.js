@@ -11,7 +11,7 @@ class Endereco {
 
     //validando cep
     static validaCEP(cep) {
-        const regexCEP = /^\d{5}-?\d{3}$/;
+        const regexCEP = /^\d{6}-?\d{2}$/;
         return regexCEP.test(cep);
     }
     static validaTexto(texto) {

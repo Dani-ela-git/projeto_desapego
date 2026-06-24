@@ -1,4 +1,4 @@
-const Donation = require('../models/Donation');
+const Donation = require('../models/donation');
 const DistanceService = require('../services/distanceService');
 const { validationResult } = require('express-validator');
 

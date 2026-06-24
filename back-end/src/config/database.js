@@ -1,6 +1,6 @@
 // config/database.js
 const mongoose = require('mongoose');
-const Category = require('../models/Category');
+const Category = require('../models/category');
 
 const connectDB = async () => {
     try {
