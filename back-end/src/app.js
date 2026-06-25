@@ -13,7 +13,16 @@ dotenv.config();
 const app = express();
 
 // Middlewares de segurança
-app.use(helmet());
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            imgSrc: ["'self'", "data:", "blob:"], // Permite imagens locais e Base64
+            scriptSrc: ["'self'", "'unsafe-inline'"], // Permite a execução dos seus scripts JS
+            styleSrc: ["'self'", "'unsafe-inline'"] // Permite carregar seus arquivos CSS
+        }
+    }
+}));
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
@@ -40,6 +49,12 @@ app.use('/api/users', userRoutes);
 app.use('/api', donationRoutes);
 app.use('/api/products', productRoutes);
 
+//imagens
+const pastaFront = path.join(__dirname, '../../front-end');
+const pastaImg = path.join(__dirname, '../../img');
+
+app.use(express.static(pastaFront));
+app.use('/img', express.static(pastaImg));
 //rotas para a página HTML
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../../front-end/index.html'));

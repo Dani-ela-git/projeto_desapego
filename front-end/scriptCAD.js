@@ -117,15 +117,19 @@ if (flagCadUser) {
         const cpfValue = document.getElementById('cpf').value;
         const cepValue = document.getElementById('cep').value;
         const idadeValue = document.getElementById('idade').value;
-        
-        // Se houver um campo telefone, ele captura. Se não, usa um padrão para não travar o back-end
-        const telefoneValue = document.getElementById('telefone')?.value || "11999999999"; 
+        const inputTelefone = document.getElementById('telefone');
+        const telefoneValue = inputTelefone ? inputTelefone.value.trim() : "";
 
         // 2. Executa as validações do seu Front
         const isNomeOk = Usuario.validaNome(nomeValue);
         const isCpfOk = Usuario.validaCPF(cpfValue);
         const isIdadeOk = Usuario.validaIdade(idadeValue);
         const isCepOk = Endereco.validaCEP(cepValue);
+
+        if (!telefoneValue || telefoneValue.replace(/[^\d]/g, '').length < 10) {
+            alert("Por favor, digite um telefone válido com DDD (apenas números ou formato padrão).");
+            return;
+        }
 
         if (isNomeOk && isCpfOk && isIdadeOk && isCepOk) {
             
@@ -151,11 +155,9 @@ if (flagCadUser) {
                     },
                     body: JSON.stringify({
                         name: user.nome,
-                        cpf: user.cpf,
-                        // Como não tem input de senha, limpamos o CPF (deixando só números) 
-                        // e enviamos como a senha padrão para passar na validação do servidor!
-                        password: user.cpf.replace(/[^\d]/g, ''), 
-                        phone: telefoneValue, 
+                        cpf: cpfValue,
+                        password: cpfValue,
+                        phone: String(telefoneValue).replace(/[^\d]/g, ''), 
                         age: parseInt(idadeValue),
                         location: {
                             address: {
@@ -206,18 +208,19 @@ if (flagCadUser) {
 }
 const flagCadProd = document.getElementById('cadProd');
 if (flagCadProd) {
-    flagCadProd.addEventListener('click', function (event) {
+    // Adicionamos o 'async' para conseguir usar o await no envio do produto
+    flagCadProd.addEventListener('click', async function (event) {
         event.preventDefault()
 
         // Usuário
         const nomeValue = document.getElementById('nome').value;
         const cpfValue = document.getElementById('cpf').value;
 
-        //descricao
+        // descricao
         const titValue = document.getElementById('titulo').value
         const descValue = document.getElementById('descricao').value
 
-        //endereco
+        // endereco
         const ruaValue = document.getElementById('rua').value;
         const numValue = document.getElementById('numero').value;
         const bairroValue = document.getElementById('bairro').value;
@@ -226,7 +229,7 @@ if (flagCadProd) {
         const cepValue = document.getElementById('cep').value;
         const estadoValue = document.getElementById('estado').value;
 
-        //validação por metodos
+        // validação por metodos
         const isNomeOk = Usuario.validaNome(nomeValue);
         const isCpfOk = Usuario.validaCPF(cpfValue);
         const isCepOk = Endereco.validaCEP(cepValue);
@@ -235,49 +238,118 @@ if (flagCadProd) {
 
         if (isNomeOk && isCpfOk && isCepOk && isTituloOk && isDescOk) {
 
-            //cria o endereco
             const end = new Endereco(ruaValue, numValue, bairroValue, compValue, cityValue, estadoValue, cepValue);
-
-            //vincula ao usuario
             const user = new Usuario(nomeValue, cpfValue, end);
 
-            //armazena as imagens - (Transformando a lista de inputs em um array de arquivos)
-            const fotosValidas = [];
-            document.querySelectorAll('.input-file').forEach(input => {
-                if (input.files[0]) fotosValidas.push(input.files[0]);
+            // 1. CAPTURA DAS IMAGENS: Buscando os previews em Base64 que estão na tela
+            const fotosEmBase64 = [];
+            document.querySelectorAll('.upload-label img').forEach(img => {
+                // Se a imagem tem um atributo 'src' e não está com a classe 'hidden'
+                if (img.src && !img.classList.contains('hidden')) {
+                    fotosEmBase64.push(img.src); // Salva o texto Base64 da imagem
+                }
             });
 
-            //vincula as infos à um Produto
-            const novoProduto = new Produto(titValue, descValue, fotosValidas, user);
+            // Cria o objeto localmente
+            const novoProduto = new Produto(titValue, descValue, fotosEmBase64, user);
+            console.log("SUCESSO! Produto pronto para o envio:", novoProduto);
 
-            console.log("SUCESSO! Produto pronto para o banco de dados:", novoProduto);
+            // 2. ENVIANDO PARA O SEU BACK-END (MONGO)
+            try {
+                // Altere a URL abaixo para a sua rota exata de cadastro de produtos (Ex: /api/products ou /api/donations)
+                const resposta = await fetch('http://localhost:3000/api/products', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        // Se o seu back-end exigir login para postar produto, enviamos o token salvo no cadastro
+                        'Authorization': `Bearer ${localStorage.getItem('token')}` 
+                    },
+                    body: JSON.stringify({
+                        title: novoProduto.titulo,
+                        description: novoProduto.descricao,
+                        images: novoProduto.imagnes, // Envia o array de strings Base64 das fotos
+                        donorCpf: String(user.cpf).replace(/[^\d]/g, '') // Vincula o produto ao CPF do dono
+                    })
+                });
 
-            // Feedback visual
-            const msgSucesso = document.getElementById('sucesso');
-            msgSucesso.textContent = 'Anúncio publicado com sucesso!';
-            msgSucesso.style.color = 'green';
+                const dadosDoServidor = await resposta.json();
+
+                if (resposta.ok) {
+                    // Feedback visual
+                    const msgSucesso = document.getElementById('sucesso');
+                    msgSucesso.textContent = 'Anúncio publicado com sucesso no MongoDB!';
+                    msgSucesso.style.color = 'green';
+                    
+                    // Limpa o formulário e os previews de imagem
+                    document.querySelector('form').reset();
+                    document.querySelectorAll('.upload-label img').forEach(img => img.classList.add('hidden'));
+                    document.querySelectorAll('.upload-label span').forEach(span => span.classList.remove('hidden'));
+                } else {
+                    alert(`Erro do servidor ao publicar produto: ${dadosDoServidor.message}`);
+                }
+
+            } catch (error) {
+                console.error("Erro de rede no produto:", error);
+                alert("Não foi possível conectar ao servidor para enviar o produto.");
+            }
 
         } else {
             alert("Por favor, verifique os campos em vermelho ou com erro.");
         }
     });
 }
+
 const flagLogin = document.getElementById('login');
 if (flagLogin) {
-    flagLogin.addEventListener('click', function (event) {
-        event.preventDefault()
+    flagLogin.addEventListener('click', async function (event) {
+        event.preventDefault();
 
+        // 1. Captura o CPF digitado na tela
         const cpfValue = document.getElementById('cpf').value;
         const isCpfOk = Usuario.validaCPF(cpfValue);
 
         if (isCpfOk) {
-            console.log("Cfp foi verificado");
-            // Feedback visual
-            const msgSucesso = document.getElementById('sucesso');
-            msgSucesso.textContent = 'CFP Validado!';
-            msgSucesso.style.color = 'green';
+            // Criamos a senha baseada no CPF limpo (apenas números), que é como o seu back-end gera no cadastro
+            const senhaPadrao = String(cpfValue).replace(/[^\d]/g, '');
+
+            // 2. ENVIANDO REQUISIÇÃO DE LOGIN
+            try {
+                const resposta = await fetch('http://localhost:3000/api/auth/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        cpf: cpfValue,      
+                        password: cpfValue 
+                    })
+                });
+
+                const dadosDoServidor = await resposta.json();
+
+                if (resposta.ok && dadosDoServidor.success) {
+                    const msgSucesso = document.getElementById('sucesso');
+                    msgSucesso.textContent = `Seja bem-vindo(a), ${dadosDoServidor.user.name}!`;
+                    msgSucesso.style.color = 'green';
+
+                    localStorage.setItem('token', dadosDoServidor.token);
+                    localStorage.setItem('userCpf', dadosDoServidor.user.cpf);
+
+                    setTimeout(() => {
+                        window.location.href = "index.html"; 
+                    }, 2000);
+
+                } else {
+                    alert(`Erro no Login: ${dadosDoServidor.message || 'CPF ou dados incorretos.'}`);
+                }
+
+            } catch (erroConexao) {
+                console.error("Erro ao conectar no login:", erroConexao);
+                alert("Não foi possível conectar ao servidor.");
+            }
+
         } else {
-            alert("Corrija os campos antes de enviar!");
+            alert("Por favor, digite um CPF válido (formato 000.000.000-00) antes de tentar entrar!");
         }
     });
 }
