@@ -5,7 +5,7 @@ const path = require('path');
 const fs = require('fs');
 
 // Garantir que a pasta de uploads existe
-const uploadDir = './uploads';
+const uploadDir = path.resolve(__dirname, '../../img');
 if (!fs.existsSync(uploadDir)) {
     fs.mkdirSync(uploadDir, { recursive: true });
 }

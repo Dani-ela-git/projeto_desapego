@@ -22,14 +22,17 @@
     left: 0;
     right: 0;
     z-index: 99;
+    display: flex;
     justify-content: space-between;
     align-items: center;
     margin: 0;
-    display: flex;
     gap: 3rem;
     transition: top 0.3s ease-in-out;
-    padding: 30px 50px;
-    height: 90px;
+    height: 100px;
+    padding: 15PX 50PX;
+
+    box-shadow: 0PX 4PX 10PX rgba(0,0,0,0.1);
+    box-sizing: border-box;
 }
 
 
@@ -499,7 +502,7 @@
 .titulo-about h1 {
     font-family: "playfair display", serif;
     color: var(--red-color);
-    font-size: 110px;
+    font-size: 80px;
     padding: 40px;
     margin: auto;
 }
@@ -595,9 +598,9 @@
 }
 
 /* ################## Pesquisa de produtos #############*/
-.header-pesquisa {
+/*.header-pesquisa {
     background-color: white;
-    /*só para visualização*/
+    só para visualização
     position: relative;
     top: 0;
     left: 0;
@@ -621,11 +624,11 @@
 }
 
 .header-pesquisa .logo .logo-image-pesquisa{
-    width: 80%; /* Aumenta a largura da logo */
-    max-width: 500px; /* Limite máximo  */
-    min-width: 250px; /* Tamanho mínimo */
+    width: 80%; /* Aumenta a largura da logo 
+    max-width: 500px; /* Limite máximo  
+    min-width: 250px; /* Tamanho mínimo 
     height: auto;
-}
+}*/
 
 .btns-pesquisa {
     /*estilo para todos os botoes de pesquisa*/
@@ -639,6 +642,8 @@
     flex-wrap: wrap; /* Permite quebra em telas menores */
     min-width: 250px;
     position: relative; /*permite o dropdown funcionar*/
+
+    margin-top: 100px;
    
 }
 
@@ -702,7 +707,7 @@
 .dropdown-categorias {
     display: none;
     position: absolute;
-    top: 85px;
+    top: 120px;
     left: 50%;
     transform: translateX(-50%);
     background-color: white;
