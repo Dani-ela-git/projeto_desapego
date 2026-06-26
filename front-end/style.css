@@ -703,6 +703,24 @@
     transform: rotate(180deg);
 }
 
+.btn-deletar {
+    background-color: var(--red-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-family: "inter", sans-serif;
+    font-size: 14px;
+    margin-top: 8px;
+    width: 100%;
+    transition: opacity 0.2s;
+}
+
+.btn-deletar:hover {
+    opacity: 0.8;
+}
+
 /* Menu dropdown que vai aparecer ao clicar */
 .dropdown-categorias {
     display: none;

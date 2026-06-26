@@ -242,18 +242,27 @@ if (flagCadProd) {
             const end = new Endereco(ruaValue, numValue, bairroValue, compValue, cityValue, estadoValue, cepValue);
             const user = new Usuario(nomeValue, cpfValue, end);
 
-            
+
 
             // coordenadas por cidade
             const coordenadas = {
-                'São Paulo': { lat: -23.5505, lon: -46.6333 },
-                'Curitiba': { lat: -25.4284, lon: -49.2731 },
-                'Rio de Janeiro': { lat: -22.9068, lon: -43.1729 },
-                'Belo Horizonte': { lat: -19.9208, lon: -43.9378 },
-                'Salvador': { lat: -12.9714, lon: -38.5108 }
+                'sao paulo': { lat: -23.5505, lon: -46.6333 },
+                'curitiba': { lat: -25.4284, lon: -49.2731 },
+                'rio de janeiro': { lat: -22.9068, lon: -43.1729 },
+                'belo horizonte': { lat: -19.9208, lon: -43.9378 },
+                'salvador': { lat: -12.9714, lon: -38.5108 },
+                'fortaleza': { lat: -3.7172, lon: -38.5433 },
+                'manaus': { lat: -3.1019, lon: -60.0250 },
+                'porto alegre': { lat: -30.0346, lon: -51.2177 },
+                'recife': { lat: -8.0476, lon: -34.8770 },
+                'brasilia': { lat: -15.7801, lon: -47.9292 }
             };
-            const coord = coordenadas[cityValue] || { lat: -23.5505, lon: -46.6333 };
 
+            // normaliza: remove acento e coloca minúsculo para não depender da digitação exata
+            const cityNorm = cityValue.toLowerCase()
+                .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
+            const coord = coordenadas[cityNorm] || { lat: -23.5505, lon: -46.6333 };
             try {
                 // monta FormData para o Multer conseguir processar os arquivos
                 const formData = new FormData();
@@ -261,8 +270,8 @@ if (flagCadProd) {
                 formData.append('description', descValue);
                 formData.append('category', categoriaValue);
                 formData.append('distanceLimit', parseInt(distanciaValue));
-                formData.append('location[latitude]', coord.lat);
-                formData.append('location[longitude]', coord.lon);
+                formData.append('latitude', coord.lat);
+                formData.append('longitude', coord.lon);
                 formData.append('location[address][street]', end.rua);
                 formData.append('location[address][number]', end.numero);
                 formData.append('location[address][neighborhood]', end.bairro);

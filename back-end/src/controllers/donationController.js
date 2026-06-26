@@ -15,10 +15,18 @@ class DonationController {
 
             const { title, description, category, distanceLimit } = req.body;
 
+            // DEBUG - remover depois
+            console.log('BODY:', req.body);
+            console.log('FILES:', req.files);
+            console.log('LAT:', req.body['location[latitude]']);
+            console.log('LON:', req.body['location[longitude]']);
             // FormData envia location[latitude] como string, precisa montar o objeto
+            const lat = req.body.latitude;
+            const lon = req.body.longitude;
+
             const location = {
-                latitude: parseFloat(req.body['location[latitude]']),
-                longitude: parseFloat(req.body['location[longitude]']),
+                latitude: parseFloat(lat),
+                longitude: parseFloat(lon),
                 address: {
                     street: req.body['location[address][street]'],
                     number: req.body['location[address][number]'],
@@ -162,7 +170,7 @@ class DonationController {
                 Donation.find(filter)
                     .skip(skip)
                     .limit(limit)
-                    .populate('donor', 'name email')
+                    .populate('donor', 'name email phone')
                     .sort({ createdAt: -1 }),
                 Donation.countDocuments(filter)
             ]);
@@ -193,7 +201,46 @@ class DonationController {
             });
         }
     }
+    static async deleteDonation(req, res) {
+        try {
+            const donation = await Donation.findById(req.params.id);
 
+            if (!donation) {
+                return res.status(404).json({
+                    success: false,
+                    message: 'Doação não encontrada'
+                });
+            }
+
+            // verifica se quem está deletando é o dono
+            if (donation.donor.toString() !== req.user.id.toString()) {
+                return res.status(403).json({
+                    success: false,
+                    message: 'Você não tem permissão para deletar esta doação'
+                });
+            }
+
+            // deleta a imagem do disco
+            const fs = require('fs');
+            const path = require('path');
+            donation.images.forEach(img => {
+                const filePath = path.join(__dirname, '../../img', img.publicId);
+                if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+            });
+
+            await Donation.findByIdAndDelete(req.params.id);
+
+            res.json({
+                success: true,
+                message: 'Doação deletada com sucesso'
+            });
+        } catch (error) {
+            res.status(500).json({
+                success: false,
+                message: error.message
+            });
+        }
+    }
     static async getDonationById(req, res) {
         try {
             const donation = await Donation.findById(req.params.id)

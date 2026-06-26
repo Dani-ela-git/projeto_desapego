@@ -6,12 +6,12 @@ let categoriaAtiva = "";
 let inputNome, inputEndereco, botaoBuscar, containerResultados;
 
 const categoriasMap = {
-    'food':        '🍎 Alimentos',
-    'clothes':     '👕 Roupas',
-    'electronics': '💻 Eletrônicos',
-    'books':       '📚 Livros',
-    'furniture':   '🪑 Móveis',
-    'others':      '📦 Outros'
+    'food':        ' Alimentos',
+    'clothes':     ' Roupas',
+    'electronics': ' Eletrônicos',
+    'books':       ' Livros',
+    'furniture':   ' Móveis',
+    'others':      ' Outros'
 };
 
 // ========================================
@@ -29,7 +29,7 @@ if (header) {
 }
 
 // ========================================
-// DOM PRONTO
+// DOM 
 // ========================================
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -87,6 +87,37 @@ document.addEventListener('DOMContentLoaded', () => {
     carregarProdutos();
 });
 
+const btnLogout = document.getElementById('btnLogout');
+if (btnLogout) {
+    btnLogout.addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.removeItem('token');
+        localStorage.removeItem('userCpf');
+        localStorage.removeItem('userName');
+        window.location.href = 'login.html';
+    });
+}
+// troca botão login/logout dinamicamente em qualquer página
+const token = localStorage.getItem('token');
+const userName = localStorage.getItem('userName');
+const navLogin = document.querySelector('.navbar .login a');
+
+if (navLogin) {
+    if (token && userName) {
+        navLogin.textContent = `Sair (${userName.split(' ')[0]})`;
+        navLogin.href = '#';
+        navLogin.addEventListener('click', (e) => {
+            e.preventDefault();
+            localStorage.removeItem('token');
+            localStorage.removeItem('userCpf');
+            localStorage.removeItem('userName');
+            window.location.href = 'login.html';
+        });
+    } else {
+        navLogin.textContent = 'Login';
+        navLogin.href = 'login.html';
+    }
+}
 // ========================================
 // FUNÇÕES DE PESQUISA
 // ========================================
@@ -165,11 +196,28 @@ function renderizarProdutos(lista) {
         return;
     }
 
+    const userCpf = localStorage.getItem('userCpf');
+    const token   = localStorage.getItem('token');
+
     lista.forEach(doacao => {
-        const imagemUrl = doacao.images?.[0]?.url || 'https://placehold.co/300x200?text=Sem+Imagem';
+        const imagemUrl      = doacao.images?.[0]?.url || 'https://placehold.co/300x200?text=Sem+Imagem';
         const cidade         = doacao.location?.address?.city || 'Localização não informada';
         const categoriaLabel = categoriasMap[doacao.category] || doacao.category;
         const doador         = doacao.donor?.name || '';
+        const telefone       = doacao.donor?.phone || '';
+
+        // formata telefone: 11987654321 -> (11) 98765-4321
+        const telFormatado = telefone.length === 11
+            ? `(${telefone.slice(0,2)}) ${telefone.slice(2,7)}-${telefone.slice(7)}`
+            : telefone.length === 10
+            ? `(${telefone.slice(0,2)}) ${telefone.slice(2,6)}-${telefone.slice(6)}`
+            : telefone;
+
+        // mostra botão deletar só se for o dono
+        const ehDono = doacao.donor?._id && token;
+        const btnDeletar = ehDono ? `
+            <button class="btn-deletar" data-id="${doacao._id}"> Remover</button>
+        ` : '';
 
         const card = document.createElement('div');
         card.className = 'card-produto';
@@ -178,8 +226,35 @@ function renderizarProdutos(lista) {
             <h3>${doacao.title}</h3>
             <p class="categoria">${categoriaLabel}</p>
             <p class="endereco">📍 ${cidade}</p>
-            ${doador ? `<p class="doador">👤 ${doador}</p>` : ''}
+            ${doador   ? `<p class="doador">👤 ${doador}</p>`         : ''}
+            ${telefone ? `<p class="telefone">📞 ${telFormatado}</p>` : ''}
+            ${btnDeletar}
         `;
         containerResultados.appendChild(card);
+    });
+
+    // evento de deletar
+    document.querySelectorAll('.btn-deletar').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            if (!confirm('Tem certeza que deseja remover esta doação?')) return;
+
+            const id = btn.dataset.id;
+            try {
+                const res = await fetch(`http://localhost:3000/api/donations/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                const json = await res.json();
+                if (json.success) {
+                    btn.closest('.card-produto').remove();
+                } else {
+                    alert(`Erro: ${json.message}`);
+                }
+            } catch (erro) {
+                alert('Não foi possível conectar ao servidor.');
+            }
+        });
     });
 }

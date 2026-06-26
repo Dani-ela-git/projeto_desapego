@@ -28,5 +28,5 @@ router.post('/donations',
 router.get('/donations/nearby', DonationController.getNearbyDonations);
 router.get('/donations/search', DonationController.searchDonations);
 router.get('/donations/:id', DonationController.getDonationById);
-
+router.delete('/donations/:id', auth, DonationController.deleteDonation);
 module.exports = router;
