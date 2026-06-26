@@ -2,6 +2,19 @@
 let lastScrolltop = 0;
 const header = document.querySelector('.header');
 
+// Filtrar em tempo real apenas se os inputs realmente existirem na página atual
+if (inputNome) {
+    inputNome.addEventListener('input', filtrarProdutos);
+}
+if (inputEndereco) {
+    inputEndereco.addEventListener('input', filtrarProdutos);
+}
+
+// Inicializar o sistema apenas se o container de resultados existir
+if (containerResultados) {
+    carregarProdutos();
+}
+
 if (header) {
     window.addEventListener('scroll', function () {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;

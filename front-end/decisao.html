@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DESAPEGO</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/png" href="/img/logosemfundo350px.png">
+</head>
+
+<body>
+    <div class="home">
+        <section class="grid-decisão">
+            <header class="header">
+                <div class="logo">
+                    <a href="#" class="logo-link">
+                        <img src="/img/logosemfundo350px.png" alt="Logo do site" class="logo-image">
+                    </a>
+                </div>
+
+                <nav class="navbar">
+                    <button class="sobre">
+                        <a href="about.html"> Sobre nós </a>
+                    </button>
+
+                    <button class="login">
+                        <a href="login.html"> Login</a>
+                    </button>
+                </nav>
+            </header>
+            <div id="main">
+                <p id="boasVindas"></p>
+                <div class="titulo">
+                    <h1>Doar faz parte!</h1>
+                    <a href="cadastro_prod.html">
+                        <button class="btn-doar">Faça uma doação</button>
+                    </a>
+                    <a href="pesquisa.html">
+                        <button class="btn-retirar">Retire uma doação</button>
+                    </a>
+                </div>
+            </div>
+
+            <footer class="footer">
+                <p class="left-footer">&copy; 2026 DESAPEGO - Todos os direitos reservados
+                </p>
+            </footer>
+        </section>
+    </div>
+
+    <script src="api-config.js"></script>
+    <script src="script.js"></script>
+    <script>
+        const nome = localStorage.getItem('userName');
+        const primeiroNome = nome ? nome.split(' ')[0] : 'visitante';
+        document.getElementById('boasVindas').textContent =
+            `Olá, ${primeiroNome}! O que você quer fazer hoje?`;
+    </script>
+
+</html>

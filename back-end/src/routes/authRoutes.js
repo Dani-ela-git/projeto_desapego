@@ -116,7 +116,7 @@ router.post('/login', async (req, res) => {
         }
         
         // Busca usuário pelo CPF (inclui senha)
-        const user = await User.findByCPF(cpf).select('+password');
+        const user = await User.findByCPF(cpf);
         
         if (!user) {
             return res.status(401).json({

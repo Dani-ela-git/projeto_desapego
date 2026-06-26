@@ -154,10 +154,11 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
 // Método para buscar por CPF (ignorando formatação)
 userSchema.statics.findByCPF = function(cpf) {
     const cleaned = cpf.replace(/[^\d]/g, '');
-    // Busca ignorando a formatação
-    return this.findOne({ 
-        cpf: { $regex: cleaned, $options: 'i' } 
-    });
+    const formatted = cleaned.replace(
+        /(\d{3})(\d{3})(\d{3})(\d{2})/,
+        '$1.$2.$3-$4'
+    );
+    return this.findOne({ cpf: formatted }).select('+password');
 };
 
 // Método para validar CPF estático

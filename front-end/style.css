@@ -782,6 +782,42 @@
     padding: 40px;
     color: #777;
 }
+
+
+
+/* DECISAO*/
+.grid-decisao {
+    display: grid;
+    grid-template-areas:
+        "header header header"
+        "main main main"
+        "footer footer footer";
+    grid-template-rows:
+        100px   /* altura do header fixo */
+        1fr     /* main ocupa o restante */
+        60px;   /* footer */
+    grid-template-columns: 1fr 1fr 1fr;
+    min-height: 100vh;
+}
+#main {
+    grid-area: main;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 200px 0px ; /* pequeno respiro, o grid já empurra */
+    gap: 1rem;
+}
+#boasVindas {
+    font-family: "inter", sans-serif;
+    font-size: 22px;
+    color: var(--purple-color);
+    text-align: center;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
 /* Responsivo */
 @media (max-width: 768px) {
     .header-pesquisa {

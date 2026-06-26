@@ -109,7 +109,7 @@ if (flagDescri) {
 }
 const flagCadUser = document.getElementById('cadUser');
 if (flagCadUser) {
-    flagCadUser.addEventListener('click', async function (event) { 
+    flagCadUser.addEventListener('click', async function (event) {
         event.preventDefault();
 
         // 1. Captura os valores que realmente existem no seu HTML
@@ -132,7 +132,7 @@ if (flagCadUser) {
         }
 
         if (isNomeOk && isCpfOk && isIdadeOk && isCepOk) {
-            
+
             // Instancia as suas classes do front
             const end = new Endereco(
                 document.getElementById('rua').value,
@@ -157,7 +157,7 @@ if (flagCadUser) {
                         name: user.nome,
                         cpf: cpfValue,
                         password: cpfValue,
-                        phone: String(telefoneValue).replace(/[^\d]/g, ''), 
+                        phone: String(telefoneValue).replace(/[^\d]/g, ''),
                         age: parseInt(idadeValue),
                         location: {
                             address: {
@@ -181,10 +181,10 @@ if (flagCadUser) {
                     const msgSucesso = document.getElementById('sucesso');
                     msgSucesso.textContent = `Sucesso: ${dadosDoServidor.message}`;
                     msgSucesso.style.color = 'green';
-                    
+
                     // Salva o token gerado para sessões futuras
                     localStorage.setItem('token', dadosDoServidor.token);
-                    
+
                     // Limpa o formulário
                     document.querySelector('form').reset();
                 } else {
@@ -262,7 +262,7 @@ if (flagCadProd) {
                     headers: {
                         'Content-Type': 'application/json',
                         // Se o seu back-end exigir login para postar produto, enviamos o token salvo no cadastro
-                        'Authorization': `Bearer ${localStorage.getItem('token')}` 
+                        'Authorization': `Bearer ${localStorage.getItem('token')}`
                     },
                     body: JSON.stringify({
                         title: novoProduto.titulo,
@@ -279,7 +279,7 @@ if (flagCadProd) {
                     const msgSucesso = document.getElementById('sucesso');
                     msgSucesso.textContent = 'Anúncio publicado com sucesso no MongoDB!';
                     msgSucesso.style.color = 'green';
-                    
+
                     // Limpa o formulário e os previews de imagem
                     document.querySelector('form').reset();
                     document.querySelectorAll('.upload-label img').forEach(img => img.classList.add('hidden'));
@@ -304,25 +304,23 @@ if (flagLogin) {
     flagLogin.addEventListener('click', async function (event) {
         event.preventDefault();
 
-        // 1. Captura o CPF digitado na tela
-        const cpfValue = document.getElementById('cpf').value;
+        const cpfValue = document.getElementById('cpf').value.trim();
         const isCpfOk = Usuario.validaCPF(cpfValue);
 
         if (isCpfOk) {
-            // Criamos a senha baseada no CPF limpo (apenas números), que é como o seu back-end gera no cadastro
-            const senhaPadrao = String(cpfValue).replace(/[^\d]/g, '');
+            // Como o cadastro usou o CPF formatado como senha, enviamos ele idêntico aqui:
+            const dadosLogin = {
+                cpf: cpfValue,      // '452.097.008-36' -> Para a busca com regex do findByCPF
+                password: cpfValue  // '452.097.008-36' -> A string exata que gerou a hash do banco
+            };
 
-            // 2. ENVIANDO REQUISIÇÃO DE LOGIN
             try {
                 const resposta = await fetch('http://localhost:3000/api/auth/login', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({
-                        cpf: cpfValue,      
-                        password: cpfValue 
-                    })
+                    body: JSON.stringify(dadosLogin)
                 });
 
                 const dadosDoServidor = await resposta.json();
@@ -332,15 +330,17 @@ if (flagLogin) {
                     msgSucesso.textContent = `Seja bem-vindo(a), ${dadosDoServidor.user.name}!`;
                     msgSucesso.style.color = 'green';
 
+                    // Salva a sessão localmente
                     localStorage.setItem('token', dadosDoServidor.token);
                     localStorage.setItem('userCpf', dadosDoServidor.user.cpf);
+                    localStorage.setItem('userName', dadosDoServidor.user.name); // <- adiciona o nome
 
                     setTimeout(() => {
-                        window.location.href = "index.html"; 
+                        window.location.href = "decisao.html"; // <- muda o destino
                     }, 2000);
 
                 } else {
-                    alert(`Erro no Login: ${dadosDoServidor.message || 'CPF ou dados incorretos.'}`);
+                    alert(`Erro no Login: ${dadosDoServidor.message}`);
                 }
 
             } catch (erroConexao) {
