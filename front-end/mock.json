@@ -1,0 +1,40 @@
+[
+  { "id": 1, "nome": "Arroz Integral 5kg", "categoria": "Alimentos", "endereco": "Av. Paulista, 1000 - São Paulo, SP", "preco": 24.90, "img" : "../img/mock/arroz.png"},
+  { "id": 2, "nome": "Feijão Carioca 1kg", "categoria": "Alimentos", "endereco": "Rua Augusta, 450 - São Paulo, SP", "preco": 8.50, "img" : "../img/mock/feijao.jpeg"},
+  { "id": 3, "nome": "Azeite de Oliva Extra Virgem 500ml", "categoria": "Alimentos", "endereco": "Rua das Flores, 12 - Curitiba, PR", "preco": 39.90, "img" : "../img/mock/azeite.png"},
+  { "id": 4, "nome": "Café Torrado e Moído 500g", "categoria": "Alimentos", "endereco": "Av. Rio Branco, 250 - Rio de Janeiro, RJ", "preco": 18.90, "img" : "../img/mock/cafe.jpeg"},
+  
+
+  { "id": 11, "nome": "Camiseta Algodão Básica Preta", "categoria": "Roupas", "endereco": "Rua Augusta, 450 - São Paulo, SP", "preco": 49.90, "img" : "../img/mock/camiseta.jpeg"},
+  { "id": 12, "nome": "Calça Jeans ", "categoria": "Roupas", "endereco": "Av. Paulista, 1000 - São Paulo, SP", "preco": 119.90, "img" : "../img/mock/jeans.jpeg"},
+  { "id": 13, "nome": "Vestido Midi Floral", "categoria": "Roupas", "endereco": "Rua das Flores, 12 - Curitiba, PR", "preco": 149.90, "img" : "../img/mock/vestido.jpeg"},
+  { "id": 14, "nome": "Casaco de Moletom com Capuz", "categoria": "Roupas", "endereco": "Rua Bahia, 300 - Belo Horizonte, MG", "preco": 89.90, "img" : "../img/mock/moletom.jpeg"},
+  
+  { "id": 21, "nome": "Garrafa Térmica Inox 750ml", "categoria": "Objetos", "endereco": "Av. Rio Branco, 250 - Rio de Janeiro, RJ", "preco": 79.90, "img" : "../img/mock/garrafa.png"},
+  { "id": 22, "nome": "Luminária de Mesa Articulada", "categoria": "Objetos", "endereco": "Av. Paulista, 1000 - São Paulo, SP", "preco": 64.50, "img" : "../img/mock/luminaria.png"},
+  { "id": 23, "nome": "Organizador de Acrílico para Maquiagem", "categoria": "Objetos", "endereco": "Rua Augusta, 450 - São Paulo, SP", "preco": 45.00, "img" : "../img/mock/organizador.png"},
+  { "id": 24, "nome": "Vaso Decorativo de Cerâmica", "categoria": "Objetos", "endereco": "Rua das Flores, 12 - Curitiba, PR", "preco": 55.90, "img" : "../img/mock/vaso.jpeg"},
+  
+  { "id": 31, "nome": "Fone de Ouvido Bluetooth Noise Cancelling", "categoria": "Eletrônicos", "endereco": "Av. Paulista, 1000 - São Paulo, SP", "preco": 299.90, "img" : "../img/mock/fone.png"},
+  { "id": 32, "nome": "Carregador Portátil Power Bank 20000mAh", "categoria": "Eletrônicos", "endereco": "Rua Augusta, 450 - São Paulo, SP", "preco": 149.90, "img" : "../img/mock/powerbank.jpeg"},
+  { "id": 33, "nome": "Teclado Mecânico RGB", "categoria": "Eletrônicos", "endereco": "Av. Rio Branco, 250 - Rio de Janeiro, RJ", "preco": 245.00, "img" : "../img/mock/teclado.png"},
+  { "id": 34, "nome": "Mouse Gamer Sem Fio", "categoria": "Eletrônicos", "endereco": "Alameda Santos, 88 - São Paulo, SP", "preco": 189.90, "img" : "../img/mock/mouse.png"},
+  
+
+  { "id": 41, "nome": "Cadeira de Escritório Ergonômica", "categoria": "Móveis", "endereco": "Rua Bahia, 300 - Belo Horizonte, MG", "preco": 549.90, "img" : "../img/mock/cadeira.png"},
+  { "id": 42, "nome": "Mesa de Escritório Estilo Industrial", "categoria": "Móveis", "endereco": "Av. Paulista, 1000 - São Paulo, SP", "preco": 389.00, "img" : "../img/mock/mesa.png"},
+  { "id": 43, "nome": "Estante para Livros 5 Prateleiras", "categoria": "Móveis", "endereco": "Rua das Flores, 12 - Curitiba, PR", "preco": 220.00, "img" : "../img/mock/estante.png"},
+  { "id": 44, "nome": "Movel Retrô MDF", "categoria": "Móveis", "endereco": "Rua Augusta, 450 - São Paulo, SP", "preco": 115.00, "img" : "../img/mock/movel.png"},
+
+  
+  { "id": 51, "nome": "O Senhor dos Anéis: A Sociedade do Anel", "categoria": "Livros", "endereco": "Av. Paulista, 1000 - São Paulo, SP", "preco": 59.90, "img" : "../img/mock/senhor.jpeg"},
+  { "id": 52, "nome": "O Nome do Vento (A Crônica do Matador do Rei)", "categoria": "Livros", "endereco": "Alameda Santos, 88 - São Paulo, SP", "preco": 64.90, "img" : "../img/mock/vento.jpeg"},
+  { "id": 53, "nome": "A Guerra dos Tronos (As Crônicas de Gelo e Fogo)", "categoria": "Livros", "endereco": "Rua Augusta, 450 - São Paulo, SP", "preco": 49.90, "img" : "../img/mock/tronos.jpeg"},
+  { "id": 54, "nome": "O Hobbit - J.R.R. Tolkien", "categoria": "Livros", "endereco": "Rua das Flores, 12 - Curitiba, PR", "preco": 38.00, "img" : "../img/mock/senhor.jpeg"},
+  { "id": 55, "nome": "O Leão, a Feiticeira e o Guarda-Roupa", "categoria": "Livros", "endereco": "Rua Bahia, 300 - Belo Horizonte, MG", "preco": 34.90, "img" : "../img/mock/narnia.jpeg"},
+  { "id": 56, "nome": "Percy Jackson e os Olimpianos: O Ladrão de Raios", "categoria": "Livros", "endereco": "Av. Rio Branco, 250 - Rio de Janeiro, RJ", "preco": 39.90, "img" : "../img/mock/percy.jpeg"},
+  { "id": 57, "nome": "Corte de Espinhos e Rosas (Vol 1)", "categoria": "Livros", "endereco": "Av. Sete de Setembro, 1500 - Salvador, BA", "preco": 42.00, "img" : "../img/mock/rosas.jpeg"},
+  { "id": 58, "nome": "Mistborn: O Império Final", "categoria": "Livros", "endereco": "Av. Paulista, 1000 - São Paulo, SP", "preco": 55.00, "img" : "../img/mock/mistborn.jpeg"},
+  { "id": 59, "nome": "O Caminho dos Reis (Os Relatos da Guerra das Tormentas)", "categoria": "Livros", "endereco": "Rua Augusta, 450 - São Paulo, SP", "preco": 89.90, "img" : "../img/mock/reis.jpeg"},
+  { "id": 60, "nome": "O Devorador de Estrelas", "categoria": "Livros", "endereco": "Alameda Santos, 88 - São Paulo, SP", "preco": 45.00, "img" : "../img/mock/estrelas.jpeg"}
+]

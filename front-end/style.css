@@ -22,14 +22,17 @@
     left: 0;
     right: 0;
     z-index: 99;
+    display: flex;
     justify-content: space-between;
     align-items: center;
     margin: 0;
-    display: flex;
     gap: 3rem;
     transition: top 0.3s ease-in-out;
-    padding: 30px 50px;
-    height: 90px;
+    height: 100px;
+    padding: 15PX 50PX;
+
+    box-shadow: 0PX 4PX 10PX rgba(0,0,0,0.1);
+    box-sizing: border-box;
 }
 
 
@@ -238,6 +241,14 @@
     border-radius: 12px;
     gap: 1rem;
 }
+
+
+
+
+
+
+/*seção de pesquisa*/
+
 
 .footer {
     display: flex;
@@ -491,7 +502,7 @@
 .titulo-about h1 {
     font-family: "playfair display", serif;
     color: var(--red-color);
-    font-size: 110px;
+    font-size: 80px;
     padding: 40px;
     margin: auto;
 }
@@ -587,9 +598,9 @@
 }
 
 /* ################## Pesquisa de produtos #############*/
-.header-pesquisa {
+/*.header-pesquisa {
     background-color: white;
-    /*só para visualização*/
+    só para visualização
     position: relative;
     top: 0;
     left: 0;
@@ -613,11 +624,11 @@
 }
 
 .header-pesquisa .logo .logo-image-pesquisa{
-    width: 80%; /* Aumenta a largura da logo */
-    max-width: 500px; /* Limite máximo  */
-    min-width: 250px; /* Tamanho mínimo */
+    width: 80%; /* Aumenta a largura da logo 
+    max-width: 500px; /* Limite máximo  
+    min-width: 250px; /* Tamanho mínimo 
     height: auto;
-}
+}*/
 
 .btns-pesquisa {
     /*estilo para todos os botoes de pesquisa*/
@@ -631,6 +642,9 @@
     flex-wrap: wrap; /* Permite quebra em telas menores */
     min-width: 250px;
     position: relative; /*permite o dropdown funcionar*/
+
+    margin-top: 100px;
+   
 }
 
 .btns-pesquisa .Nome-produto, 
@@ -689,11 +703,29 @@
     transform: rotate(180deg);
 }
 
+.btn-deletar {
+    background-color: var(--red-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-family: "inter", sans-serif;
+    font-size: 14px;
+    margin-top: 8px;
+    width: 100%;
+    transition: opacity 0.2s;
+}
+
+.btn-deletar:hover {
+    opacity: 0.8;
+}
+
 /* Menu dropdown que vai aparecer ao clicar */
 .dropdown-categorias {
     display: none;
     position: absolute;
-    top: 85px;
+    top: 120px;
     left: 50%;
     transform: translateX(-50%);
     background-color: white;
@@ -722,6 +754,86 @@
 /* Mostrar dropdown */
 .dropdown-categorias.show {
     display: block;
+}
+
+#resultados {
+    display: grid;
+    /* Cria colunas automáticas com tamanho mínimo de 250px */
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 24px; /* Espaçamento idêntico entre os cards */
+    padding: 20px;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    box-sizing: border-box;
+
+}
+
+.card-produto{
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column; /* Alinha os itens verticalmente */
+    justify-content: space-between; /* Empurra o preço para o rodapé do card */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    overflow: hidden;
+}
+.card-produto:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+}
+.card-produto img {
+    height: 200px;
+    width: 100%;
+    object-fit:cover;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    background-color: #f5f5f5;
+}
+
+.sem-resultados {
+    grid-column: 1 / -1; /* Ocupa a largura inteira da tela */
+    text-align: center;
+    padding: 40px;
+    color: #777;
+}
+
+
+
+/* DECISAO*/
+.grid-decisao {
+    display: grid;
+    grid-template-areas:
+        "header header header"
+        "main main main"
+        "footer footer footer";
+    grid-template-rows:
+        100px   /* altura do header fixo */
+        1fr     /* main ocupa o restante */
+        60px;   /* footer */
+    grid-template-columns: 1fr 1fr 1fr;
+    min-height: 100vh;
+}
+#main {
+    grid-area: main;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 200px 0px ; /* pequeno respiro, o grid já empurra */
+    gap: 1rem;
+}
+#boasVindas {
+    font-family: "inter", sans-serif;
+    font-size: 22px;
+    color: var(--purple-color);
+    text-align: center;
+    width: 100%;
+    margin-bottom: 10px;
 }
 
 /* Responsivo */

@@ -13,7 +13,18 @@ dotenv.config();
 const app = express();
 
 // Middlewares de segurança
-app.use(helmet());
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            imgSrc: ["'self'", "data:", "blob:", "http://localhost:3000"],
+            scriptSrc: ["'self'", "'unsafe-inline'"],
+            scriptSrcAttr: ["'unsafe-inline'"], // <- permite onclick e eventos inline
+            styleSrc: ["'self'", "'unsafe-inline'"],
+            connectSrc: ["'self'", "http://localhost:3000"] // <- permite fetch para a API
+        }
+    }
+}));
 app.use(cors());
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
@@ -39,6 +50,15 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api', donationRoutes);
 app.use('/api/products', productRoutes);
+
+//imagens
+const pastaFront = path.join(__dirname, '../../front-end');
+const pastaImgFront = path.join(__dirname, '../../front-end/img');
+const pastaImgUpload = path.join(__dirname, '../img');
+
+app.use(express.static(pastaFront));
+app.use('/img', express.static(pastaImgFront));       // imagens do front-end
+app.use('/uploads', express.static(pastaImgUpload));  // imagens de upload
 
 //rotas para a página HTML
 app.get('/', (req, res) => {
