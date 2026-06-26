@@ -13,11 +13,25 @@ class DonationController {
                 return res.status(400).json({ errors: errors.array() });
             }
 
-            const { title, description, category, location, distanceLimit } = req.body;
+            const { title, description, category, distanceLimit } = req.body;
 
+            // FormData envia location[latitude] como string, precisa montar o objeto
+            const location = {
+                latitude: parseFloat(req.body['location[latitude]']),
+                longitude: parseFloat(req.body['location[longitude]']),
+                address: {
+                    street: req.body['location[address][street]'],
+                    number: req.body['location[address][number]'],
+                    neighborhood: req.body['location[address][neighborhood]'],
+                    complement: req.body['location[address][complement]'],
+                    city: req.body['location[address][city]'],
+                    state: req.body['location[address][state]'],
+                    zipCode: req.body['location[address][zipCode]']
+                }
+            };
             // Processar imagens (via Multer)
             const images = req.files?.map(file => ({
-                url: file.path,
+                url: `/uploads/${file.filename}`,
                 publicId: file.filename
             })) || [];
 

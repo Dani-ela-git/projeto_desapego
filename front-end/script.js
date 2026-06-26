@@ -1,193 +1,185 @@
-// arrumando a header para subir ao ser acionado o scroll
-let lastScrolltop = 0;
+// ========================================
+// VARIÁVEIS GLOBAIS
+// ========================================
+let todosOsProdutos = [];
+let categoriaAtiva = "";
+let inputNome, inputEndereco, botaoBuscar, containerResultados;
+
+const categoriasMap = {
+    'food':        '🍎 Alimentos',
+    'clothes':     '👕 Roupas',
+    'electronics': '💻 Eletrônicos',
+    'books':       '📚 Livros',
+    'furniture':   '🪑 Móveis',
+    'others':      '📦 Outros'
+};
+
+// ========================================
+// HEADER — esconde ao rolar para baixo
+// ========================================
+let lastScrollTop = 0;
 const header = document.querySelector('.header');
-
-// Filtrar em tempo real apenas se os inputs realmente existirem na página atual
-if (inputNome) {
-    inputNome.addEventListener('input', filtrarProdutos);
-}
-if (inputEndereco) {
-    inputEndereco.addEventListener('input', filtrarProdutos);
-}
-
-// Inicializar o sistema apenas se o container de resultados existir
-if (containerResultados) {
-    carregarProdutos();
-}
 
 if (header) {
     window.addEventListener('scroll', function () {
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-
-        if (scrollTop > lastScrolltop) {
-            // rolando para baixo
-            header.style.top = '-200px'; // esconde a header
-        } else {
-            // rolando para cima
-            header.style.top = '0'; // mostra a header
-        }
-
-        lastScrolltop = scrollTop;
+        header.style.top = scrollTop > lastScrollTop ? '-200px' : '0';
+        lastScrollTop = scrollTop;
     });
 }
 
-// eventos da parte de pesquisa (dropdown)
-// aguardando DOM carregar
-document.addEventListener('DOMContentLoaded', function () {  // CORRIGIDO: tinha ){ e estava errado
+// ========================================
+// DOM PRONTO
+// ========================================
+document.addEventListener('DOMContentLoaded', () => {
 
-    // selecionando o botão Categorias
-    const btnCategoria = document.getElementById('btnCategoria'); // CORRIGIDO: usar ID direto
+    inputNome          = document.getElementById('nome-produto');
+    inputEndereco      = document.getElementById('input-endereco');
+    botaoBuscar        = document.getElementById('botao-buscar');
+    containerResultados = document.getElementById('resultados');
 
-    // verifica se o botão existe
-    if (btnCategoria) {
-        // pega o dropdown que já existe no HTML
-        const dropdown = document.querySelector('.dropdown-categorias'); // CORRIGIDO: não precisa criar
+    // só roda o resto se for a página de pesquisa
+    if (!containerResultados) return;
 
-        // função que abre e fecha o dropdown
-        function abreFecha(event) {
-            event.stopPropagation(); // evita que o clique feche imediatamente
+    // --- Dropdown de categorias ---
+    const btnCategoria = document.getElementById('btnCategoria');
+    const dropdown     = document.getElementById('dropdownMenu');
+
+    if (btnCategoria && dropdown) {
+
+        // abre/fecha ao clicar no botão
+        btnCategoria.addEventListener('click', (e) => {
+            e.stopPropagation();
             dropdown.classList.toggle('show');
             btnCategoria.classList.toggle('ativo');
-        }
+        });
 
-        // Adiciona evento de clique no botão de categoria
-        btnCategoria.addEventListener('click', abreFecha);
-
-        // Fecha o dropdown se clicar fora
-        document.addEventListener('click', function (event) {
-            if (btnCategoria && dropdown) {
-                if (!btnCategoria.contains(event.target) && !dropdown.contains(event.target)) {
-                    dropdown.classList.remove('show');
-                    btnCategoria.classList.remove('ativo');
-                }
+        // fecha ao clicar fora
+        document.addEventListener('click', (e) => {
+            if (!btnCategoria.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.remove('show');
+                btnCategoria.classList.remove('ativo');
             }
         });
 
-        // função para retirar o dropdown quando clicar em uma categoria
-        const links = dropdown.querySelectorAll('a');
-        links.forEach(link => {
-            link.addEventListener('click', function (event) {
-                event.preventDefault(); // CORRIGIDO: evitar navegação
-                // Opcional: preencher o botão com a categoria selecionada
-                const spanCategoria = btnCategoria.querySelector('span:first-child');
-                if (spanCategoria) {
-                    spanCategoria.textContent = this.textContent;
-                }
-                dropdown.classList.remove('show');
-                btnCategoria.classList.remove('ativo');
+        // seleciona categoria ao clicar no link
+        dropdown.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                selecionarCategoriaViaMenu(link.dataset.categoria);
             });
         });
     }
+
+    // --- Botão buscar ---
+    if (botaoBuscar) {
+        botaoBuscar.addEventListener('click', (e) => {
+            e.preventDefault();
+            filtrarProdutos();
+        });
+    }
+
+    // --- Filtro em tempo real ---
+    if (inputNome)     inputNome.addEventListener('input', filtrarProdutos);
+    if (inputEndereco) inputEndereco.addEventListener('input', filtrarProdutos);
+
+    // --- Carrega produtos ao abrir a página ---
+    carregarProdutos();
 });
 
-
-
-// gambiaeea
-// var global para guardar todos os produtos do JSON
-let todosOsProdutos = [];
-// Nova variável global para controlar qual categoria está ativa no momento
-let categoriaAtiva = ""; 
-
-const inputNome = document.getElementById('nome-produto');          // nome do produto
-const selectCategoria = document.getElementById('dropdownMenu');     // O container/botão do seu dropdown
-const inputEndereco = document.getElementById('input-endereco');    // endereço
-const botaoBuscar = document.getElementById('botao-buscar');        // buscar
-const containerResultados = document.getElementById('resultados');  // visor dos resultados
-
-// carrega o arquivo JSON
+// ========================================
+// FUNÇÕES DE PESQUISA
+// ========================================
 async function carregarProdutos() {
-  try {
-    const resposta = await fetch('mock.json'); // Lendo o seu arquivo mock.json
-    todosOsProdutos = await resposta.json();
-    
-    // mostra todos os produtos assim que a página carregar
-    renderizarProdutos(todosOsProdutos);
-  } catch (erro) {
-    console.error("Erro ao carregar os dados dos produtos:", erro);
-  }
+    try {
+        const resposta = await fetch('http://localhost:3000/api/donations/search');
+        const json = await resposta.json();
+
+        if (json.success) {
+            todosOsProdutos = json.data;
+            renderizarProdutos(todosOsProdutos);
+        } else {
+            console.error('Erro do servidor:', json.message);
+        }
+    } catch (erro) {
+        console.error('Erro ao carregar doações:', erro);
+        if (containerResultados) {
+            containerResultados.innerHTML = `
+                <div class="sem-resultados">
+                    <p>Não foi possível conectar ao servidor.</p>
+                </div>`;
+        }
+    }
 }
 
-// ESTA FUNÇÃO SERÁ CHAMADA PELO ONCLICK DOS SEUS LINKS <a>
-function selecionarCategoriaViaMenu(nomeDaCategoria) {
-  categoriaAtiva = nomeDaCategoria; // Atualiza a categoria global com o que foi clicado
+function selecionarCategoriaViaMenu(valor) {
+    categoriaAtiva = valor;
 
-  // Opcional: Atualiza o texto do botão principal do dropdown para o usuário ver o que selecionou
-  const btnTexto = document.querySelector('.Categoria span');
-  if (btnTexto) {
-    btnTexto.innerText = nomeDaCategoria === "" ? "Categoria" : nomeDaCategoria;
-  }
+    const btnTexto = document.querySelector('#btnCategoria span:first-child');
+    if (btnTexto) {
+        btnTexto.textContent = valor === "" ? "Categoria" : categoriasMap[valor] || valor;
+    }
 
-  // Dispara o filtro imediatamente após a escolha
-  filtrarProdutos();
-}
+    document.getElementById('dropdownMenu')?.classList.remove('show');
+    document.getElementById('btnCategoria')?.classList.remove('ativo');
 
-// filtra os dados com base nos inputs da tela
-function filtrarProdutos() {
-  const buscaNome = inputNome.value.toLowerCase();
-  // Agora lemos a nossa variável controlada pelo clique, não mais o ".value" que dava erro
-  const buscaCategoria = categoriaAtiva; 
-  const buscaEndereco = inputEndereco.value.toLowerCase();
-
-  const produtosFiltrados = todosOsProdutos.filter(produto => {
-    // Verifica se o nome do produto contém o que foi digitado
-    const bateNome = produto.nome.toLowerCase().includes(buscaNome);
-    
-    // Se não selecionou categoria (vazio), ignora o filtro. Se selecionou, precisa ser igual.
-    const bateCategoria = buscaCategoria === "" || produto.categoria === buscaCategoria;
-    
-    // Verifica se o endereço contém o termo digitado
-    const bateEndereco = produto.endereco.toLowerCase().includes(buscaEndereco);
-
-    // O produto só aparece se passar nos 3 filtros ao mesmo tempo
-    return bateNome && bateCategoria && bateEndereco;
-  });
-
-  // Atualiza a tela com o resultado do filtro
-  renderizarProdutos(produtosFiltrados);
-}
-
-// exibe os produtos na tela 
-function renderizarProdutos(lista) {
-  // Limpa os resultados anteriores
-  containerResultados.innerHTML = "";
-
-  // Se a busca não retornar nada, aplica a estratégia de "Busca Vazia"
-  if (lista.length === 0) {
-    containerResultados.innerHTML = `
-      <div class="sem-resultados">
-        <p>Nenhum produto encontrado para essa combinação de filtros.</p>
-        <small>Tente mudar a categoria ou digitar outro termo!</small>
-      </div>
-    `;
-    return;
-  }
-
-  // Se houver resultados, cria o HTML de cada um deles
-  lista.forEach(produto => {
-    const card = document.createElement('div');
-    card.className = 'card-produto'
-    card.innerHTML = `
-    <img src="${produto.img}" alt="Imagem do produto ${produto.nome}" class="imagem-produto">
-    <h3>${produto.nome}</h3>
-    <p class="categoria">🏷️ ${produto.categoria}</p>
-    <p class="endereco">📍 ${produto.endereco}</p>
-    
-  `;
-    containerResultados.appendChild(card);
-  });
-}
-
-// Se o usuário clicar no botão da lupa, também roda o filtro
-if (botaoBuscar) {
-  botaoBuscar.addEventListener('click', (e) => {
-    e.preventDefault(); // Evita que o formulário recarregue a página
     filtrarProdutos();
-  });
 }
 
-// Filtrar em tempo real enquanto o usuário digita nos campos de texto
-inputNome.addEventListener('input', filtrarProdutos);
-inputEndereco.addEventListener('input', filtrarProdutos);
+async function filtrarProdutos() {
+    const params = new URLSearchParams();
+    if (inputNome?.value.trim())    params.append('keyword', inputNome.value.trim());
+    if (categoriaAtiva)             params.append('category', categoriaAtiva);
 
-// Inicializar o sistema ao carregar a página
-carregarProdutos();
+    try {
+        const resposta = await fetch(`http://localhost:3000/api/donations/search?${params}`);
+        const json = await resposta.json();
+
+        if (json.success) {
+            const buscaEndereco = inputEndereco?.value.toLowerCase().trim() || "";
+            const filtrados = buscaEndereco
+                ? json.data.filter(d => {
+                    const cidade = d.location?.address?.city?.toLowerCase() || "";
+                    const bairro = d.location?.address?.neighborhood?.toLowerCase() || "";
+                    return cidade.includes(buscaEndereco) || bairro.includes(buscaEndereco);
+                })
+                : json.data;
+
+            renderizarProdutos(filtrados);
+        }
+    } catch (erro) {
+        console.error('Erro ao filtrar:', erro);
+    }
+}
+
+function renderizarProdutos(lista) {
+    if (!containerResultados) return;
+    containerResultados.innerHTML = "";
+
+    if (lista.length === 0) {
+        containerResultados.innerHTML = `
+            <div class="sem-resultados">
+                <p>Nenhuma doação encontrada.</p>
+                <small>Tente mudar a categoria ou digitar outro termo!</small>
+            </div>`;
+        return;
+    }
+
+    lista.forEach(doacao => {
+        const imagemUrl = doacao.images?.[0]?.url || 'https://placehold.co/300x200?text=Sem+Imagem';
+        const cidade         = doacao.location?.address?.city || 'Localização não informada';
+        const categoriaLabel = categoriasMap[doacao.category] || doacao.category;
+        const doador         = doacao.donor?.name || '';
+
+        const card = document.createElement('div');
+        card.className = 'card-produto';
+        card.innerHTML = `
+            <img src="${imagemUrl}" alt="${doacao.title}">
+            <h3>${doacao.title}</h3>
+            <p class="categoria">${categoriaLabel}</p>
+            <p class="endereco">📍 ${cidade}</p>
+            ${doador ? `<p class="doador">👤 ${doador}</p>` : ''}
+        `;
+        containerResultados.appendChild(card);
+    });
+}

@@ -17,9 +17,11 @@ app.use(helmet({
     contentSecurityPolicy: {
         directives: {
             defaultSrc: ["'self'"],
-            imgSrc: ["'self'", "data:", "blob:"], // Permite imagens locais e Base64
-            scriptSrc: ["'self'", "'unsafe-inline'"], // Permite a execução dos seus scripts JS
-            styleSrc: ["'self'", "'unsafe-inline'"] // Permite carregar seus arquivos CSS
+            imgSrc: ["'self'", "data:", "blob:", "http://localhost:3000"],
+            scriptSrc: ["'self'", "'unsafe-inline'"],
+            scriptSrcAttr: ["'unsafe-inline'"], // <- permite onclick e eventos inline
+            styleSrc: ["'self'", "'unsafe-inline'"],
+            connectSrc: ["'self'", "http://localhost:3000"] // <- permite fetch para a API
         }
     }
 }));
@@ -51,10 +53,13 @@ app.use('/api/products', productRoutes);
 
 //imagens
 const pastaFront = path.join(__dirname, '../../front-end');
-const pastaImg = path.join(__dirname, '../../img');
+const pastaImgFront = path.join(__dirname, '../../front-end/img');
+const pastaImgUpload = path.join(__dirname, '../img');
 
 app.use(express.static(pastaFront));
-app.use('/img', express.static(pastaImg));
+app.use('/img', express.static(pastaImgFront));       // imagens do front-end
+app.use('/uploads', express.static(pastaImgUpload));  // imagens de upload
+
 //rotas para a página HTML
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../../front-end/index.html'));

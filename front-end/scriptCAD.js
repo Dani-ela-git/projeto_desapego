@@ -208,19 +208,14 @@ if (flagCadUser) {
 }
 const flagCadProd = document.getElementById('cadProd');
 if (flagCadProd) {
-    // Adicionamos o 'async' para conseguir usar o await no envio do produto
     flagCadProd.addEventListener('click', async function (event) {
-        event.preventDefault()
+        event.preventDefault();
 
-        // Usuário
         const nomeValue = document.getElementById('nome').value;
         const cpfValue = document.getElementById('cpf').value;
-
-        // descricao
-        const titValue = document.getElementById('titulo').value
-        const descValue = document.getElementById('descricao').value
-
-        // endereco
+        const titValue = document.getElementById('titulo').value;
+        const descValue = document.getElementById('descricao').value;
+        const categoriaValue = document.getElementById('categoria').value;
         const ruaValue = document.getElementById('rua').value;
         const numValue = document.getElementById('numero').value;
         const bairroValue = document.getElementById('bairro').value;
@@ -228,73 +223,90 @@ if (flagCadProd) {
         const compValue = document.getElementById('complemento').value;
         const cepValue = document.getElementById('cep').value;
         const estadoValue = document.getElementById('estado').value;
+        const distanciaValue = document.getElementById('distancia')?.value || 10;
 
-        // validação por metodos
         const isNomeOk = Usuario.validaNome(nomeValue);
         const isCpfOk = Usuario.validaCPF(cpfValue);
         const isCepOk = Endereco.validaCEP(cepValue);
         const isTituloOk = Produto.validaTitulo(titValue);
         const isDescOk = Produto.validaDescricao(descValue);
+        const isCategoriaOk = categoriaValue !== "";
+
+        if (!isCategoriaOk) {
+            alert("Por favor, selecione uma categoria.");
+            return;
+        }
 
         if (isNomeOk && isCpfOk && isCepOk && isTituloOk && isDescOk) {
 
             const end = new Endereco(ruaValue, numValue, bairroValue, compValue, cityValue, estadoValue, cepValue);
             const user = new Usuario(nomeValue, cpfValue, end);
 
-            // 1. CAPTURA DAS IMAGENS: Buscando os previews em Base64 que estão na tela
-            const fotosEmBase64 = [];
-            document.querySelectorAll('.upload-label img').forEach(img => {
-                // Se a imagem tem um atributo 'src' e não está com a classe 'hidden'
-                if (img.src && !img.classList.contains('hidden')) {
-                    fotosEmBase64.push(img.src); // Salva o texto Base64 da imagem
-                }
-            });
+            
 
-            // Cria o objeto localmente
-            const novoProduto = new Produto(titValue, descValue, fotosEmBase64, user);
-            console.log("SUCESSO! Produto pronto para o envio:", novoProduto);
+            // coordenadas por cidade
+            const coordenadas = {
+                'São Paulo': { lat: -23.5505, lon: -46.6333 },
+                'Curitiba': { lat: -25.4284, lon: -49.2731 },
+                'Rio de Janeiro': { lat: -22.9068, lon: -43.1729 },
+                'Belo Horizonte': { lat: -19.9208, lon: -43.9378 },
+                'Salvador': { lat: -12.9714, lon: -38.5108 }
+            };
+            const coord = coordenadas[cityValue] || { lat: -23.5505, lon: -46.6333 };
 
-            // 2. ENVIANDO PARA O SEU BACK-END (MONGO)
             try {
-                // Altere a URL abaixo para a sua rota exata de cadastro de produtos (Ex: /api/products ou /api/donations)
-                const resposta = await fetch('http://localhost:3000/api/products', {
+                // monta FormData para o Multer conseguir processar os arquivos
+                const formData = new FormData();
+                formData.append('title', titValue);
+                formData.append('description', descValue);
+                formData.append('category', categoriaValue);
+                formData.append('distanceLimit', parseInt(distanciaValue));
+                formData.append('location[latitude]', coord.lat);
+                formData.append('location[longitude]', coord.lon);
+                formData.append('location[address][street]', end.rua);
+                formData.append('location[address][number]', end.numero);
+                formData.append('location[address][neighborhood]', end.bairro);
+                formData.append('location[address][complement]', end.complemento);
+                formData.append('location[address][city]', end.cidade);
+                formData.append('location[address][state]', end.estado);
+                formData.append('location[address][zipCode]', end.cep);
+
+                // adiciona os arquivos reais, não o Base64
+                document.querySelectorAll('.input-file').forEach(input => {
+                    if (input.files[0]) {
+                        formData.append('images', input.files[0]);
+                    }
+                });
+
+                const resposta = await fetch('http://localhost:3000/api/donations', {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json',
-                        // Se o seu back-end exigir login para postar produto, enviamos o token salvo no cadastro
                         'Authorization': `Bearer ${localStorage.getItem('token')}`
                     },
-                    body: JSON.stringify({
-                        title: novoProduto.titulo,
-                        description: novoProduto.descricao,
-                        images: novoProduto.imagnes, // Envia o array de strings Base64 das fotos
-                        donorCpf: String(user.cpf).replace(/[^\d]/g, '') // Vincula o produto ao CPF do dono
-                    })
+                    body: formData
                 });
 
                 const dadosDoServidor = await resposta.json();
 
-                if (resposta.ok) {
-                    // Feedback visual
+                if (resposta.ok && dadosDoServidor.success) {
                     const msgSucesso = document.getElementById('sucesso');
-                    msgSucesso.textContent = 'Anúncio publicado com sucesso no MongoDB!';
+                    msgSucesso.textContent = 'Doação publicada com sucesso!';
                     msgSucesso.style.color = 'green';
 
-                    // Limpa o formulário e os previews de imagem
                     document.querySelector('form').reset();
                     document.querySelectorAll('.upload-label img').forEach(img => img.classList.add('hidden'));
                     document.querySelectorAll('.upload-label span').forEach(span => span.classList.remove('hidden'));
                 } else {
-                    alert(`Erro do servidor ao publicar produto: ${dadosDoServidor.message}`);
+                    alert(`Erro: ${dadosDoServidor.message || JSON.stringify(dadosDoServidor.errors)}`);
                 }
 
             } catch (error) {
-                console.error("Erro de rede no produto:", error);
-                alert("Não foi possível conectar ao servidor para enviar o produto.");
+                console.error("Erro de rede:", error);
+                alert("Não foi possível conectar ao servidor. Ele está rodando?");
             }
 
         } else {
-            alert("Por favor, verifique os campos em vermelho ou com erro.");
+            alert("Por favor, verifique os campos antes de enviar.");
         }
     });
 }
